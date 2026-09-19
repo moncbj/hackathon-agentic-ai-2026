@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { loadEnvConfig } from '@next/env';
 import { runSeed, SeedDataset } from '../lib/db/repositories/seed';
+
+// Load environment variables from .env.local and .env
+loadEnvConfig(process.cwd());
 
 async function main() {
   const seedDir = path.join(process.cwd(), 'data', 'seed');

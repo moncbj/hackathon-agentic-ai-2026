@@ -1,5 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { loadEnvConfig } from '@next/env';
+
+// Load environment variables from .env.local and .env
+loadEnvConfig(process.cwd());
 
 interface ResourceItem {
   skill_slug: string;
