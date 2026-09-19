@@ -1,0 +1,34 @@
+[
+  {
+    "skill_slug": "sql",
+    "prerequisite_skill_slug": "spreadsheets"
+  },
+  {
+    "skill_slug": "descriptive-statistics",
+    "prerequisite_skill_slug": "spreadsheets"
+  },
+  {
+    "skill_slug": "probability",
+    "prerequisite_skill_slug": "descriptive-statistics"
+  },
+  {
+    "skill_slug": "pandas",
+    "prerequisite_skill_slug": "basic-python"
+  },
+  {
+    "skill_slug": "data-cleaning",
+    "prerequisite_skill_slug": "pandas"
+  },
+  {
+    "skill_slug": "data-visualization",
+    "prerequisite_skill_slug": "descriptive-statistics"
+  },
+  {
+    "skill_slug": "communicating-results",
+    "prerequisite_skill_slug": "data-visualization"
+  },
+  {
+    "skill_slug": "relational-modeling",
+    "prerequisite_skill_slug": "sql"
+  }
+]
