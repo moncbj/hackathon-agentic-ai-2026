@@ -2,9 +2,13 @@ import { HealthResponse, Result } from './types';
 import { apiClient, isMockMode, getMockState } from './client';
 
 export async function fetchHealth(): Promise<Result<HealthResponse>> {
-  if (isMockMode) {
+  if (isMockMode()) {
     const mockState = getMockState();
     
+    if (mockState === 'loading') {
+      return new Promise(() => {}); // never resolves
+    }
+
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
