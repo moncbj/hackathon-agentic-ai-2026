@@ -5,7 +5,7 @@ import type {
     TutorDetail,
     TutorStyle,
     TutorTone,
-} from '../api/onboarding-types';
+} from '../_lib/api/onboarding-types';
 
 export const LIMITS = {
     nameMax: 80,

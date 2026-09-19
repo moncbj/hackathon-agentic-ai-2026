@@ -8,7 +8,7 @@ import {
     validateStep,
     validateTutorStep,
     type OnboardingFormValues,
-} from '../app/_lib/onboarding/validation';
+} from '@/app/onboarding/validation';
 
 function makeValues(overrides: Partial<OnboardingFormValues> = {}): OnboardingFormValues {
     return {
