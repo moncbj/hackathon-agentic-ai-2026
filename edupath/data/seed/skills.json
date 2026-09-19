@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "sql",
+    "name": "SQL",
+    "description": "Relational database querying, filtering, aggregations, joins, and group by operations.",
+    "category": "Data Management"
+  },
+  {
+    "slug": "spreadsheets",
+    "name": "Spreadsheets",
+    "description": "Tabular data manipulation, formulas, lookup functions, and pivot tables in modern spreadsheets.",
+    "category": "Data Analysis"
+  },
+  {
+    "slug": "descriptive-statistics",
+    "name": "Descriptive Statistics",
+    "description": "Measures of central tendency, variance, distributions, percentiles, and summary metrics.",
+    "category": "Mathematics & Statistics"
+  },
+  {
+    "slug": "probability",
+    "name": "Probability",
+    "description": "Probability rules, conditional probability, independent events, and basic discrete distributions.",
+    "category": "Mathematics & Statistics"
+  },
+  {
+    "slug": "basic-python",
+    "name": "Basic Python",
+    "description": "Core Python programming syntax, data structures, loops, functions, and control flow.",
+    "category": "Programming"
+  },
+  {
+    "slug": "pandas",
+    "name": "Pandas",
+    "description": "Data manipulation with Pandas DataFrames, series, indexing, grouping, and aggregations.",
+    "category": "Programming"
+  },
+  {
+    "slug": "data-cleaning",
+    "name": "Data Cleaning",
+    "description": "Detecting and resolving missing values, duplicates, inconsistent formats, and outliers.",
+    "category": "Data Analysis"
+  },
+  {
+    "slug": "data-visualization",
+    "name": "Data Visualization",
+    "description": "Designing clear visual representations of data, choosing chart types, and chart interpretation.",
+    "category": "Visualization"
+  },
+  {
+    "slug": "communicating-results",
+    "name": "Communicating Results",
+    "description": "Synthesizing data findings into executive summaries, reports, and compelling presentations.",
+    "category": "Communication"
+  },
+  {
+    "slug": "relational-modeling",
+    "name": "Relational Modeling",
+    "description": "Entity-relationship concepts, normalization (1NF, 2NF, 3NF), and primary/foreign key schemas.",
+    "category": "Data Management"
+  },
+  {
+    "slug": "basic-git",
+    "name": "Basic Git",
+    "description": "Version control fundamentals: tracking changes, commits, branches, and remote repositories.",
+    "category": "Tools & Workflow"
+  }
+]

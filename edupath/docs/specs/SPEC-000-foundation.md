@@ -1,6 +1,7 @@
 # SPEC-000: Foundation, data and deployment
 
-- **Status:** pending
+- **Status:** implemented
+- **Verification Note:** Local build, lint, typecheck, unit/API tests, and all 22 seed URLs verified. External Supabase DB credentials and Vercel project deployment link required for live cloud deployment.
 - **Priority:** P0
 - **Depends on:** nothing
 - **Read first:** `/docs/PRODUCT.md`, `/docs/specs/README.md`

@@ -1,0 +1,68 @@
+[
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "sql",
+    "required_level": 3,
+    "weight": 5
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "spreadsheets",
+    "required_level": 3,
+    "weight": 4
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "descriptive-statistics",
+    "required_level": 2,
+    "weight": 4
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "probability",
+    "required_level": 2,
+    "weight": 3
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "basic-python",
+    "required_level": 2,
+    "weight": 4
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "pandas",
+    "required_level": 2,
+    "weight": 4
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "data-cleaning",
+    "required_level": 3,
+    "weight": 5
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "data-visualization",
+    "required_level": 2,
+    "weight": 4
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "communicating-results",
+    "required_level": 2,
+    "weight": 3
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "relational-modeling",
+    "required_level": 2,
+    "weight": 3
+  },
+  {
+    "role_slug": "data-analyst-junior",
+    "skill_slug": "basic-git",
+    "required_level": 1,
+    "weight": 2
+  }
+]
