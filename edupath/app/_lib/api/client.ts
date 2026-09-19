@@ -20,19 +20,19 @@ export async function apiClient<T>(url: string, options?: RequestInit): Promise<
   let response: Response;
   try {
     response = await fetch(url, options);
-  } catch (error) {
+  } catch {
     // Any exception thrown by fetch() itself is a network failure
     return { data: null, error: { type: 'network', message: 'A network error occurred. Please check your connection.' } };
   }
 
   if (!response.ok) {
-    return { 
-      data: null, 
-      error: { 
-        type: 'http', 
-        message: 'The server responded with an error.', 
-        status: response.status 
-      } 
+    return {
+      data: null,
+      error: {
+        type: 'http',
+        message: 'The server responded with an error.',
+        status: response.status
+      }
     };
   }
 
