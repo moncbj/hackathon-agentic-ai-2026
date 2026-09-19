@@ -1,0 +1,222 @@
+[
+  {
+    "skill_slug": "sql",
+    "title": "PostgreSQL Official Tutorial",
+    "url": "https://www.postgresql.org/docs/current/tutorial.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "sql",
+    "title": "SQLBolt Interactive Lessons",
+    "url": "https://sqlbolt.com/",
+    "type": "practice",
+    "level_min": 0,
+    "level_max": 2,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "spreadsheets",
+    "title": "Microsoft Excel Training Hub",
+    "url": "https://support.microsoft.com/en-us/excel",
+    "type": "course",
+    "level_min": 0,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "spreadsheets",
+    "title": "W3Schools Excel Tutorial",
+    "url": "https://www.w3schools.com/excel/index.php",
+    "type": "practice",
+    "level_min": 0,
+    "level_max": 2,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "descriptive-statistics",
+    "title": "Khan Academy - Summarizing Quantitative Data",
+    "url": "https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data",
+    "type": "course",
+    "level_min": 0,
+    "level_max": 2,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "descriptive-statistics",
+    "title": "OpenStax Introductory Statistics",
+    "url": "https://openstax.org/details/books/introductory-statistics",
+    "type": "article",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "probability",
+    "title": "Khan Academy - Probability Library",
+    "url": "https://www.khanacademy.org/math/statistics-probability/probability-library",
+    "type": "course",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "probability",
+    "title": "Seeing Theory - Visual Probability",
+    "url": "https://seeing-theory.brown.edu/",
+    "type": "practice",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "basic-python",
+    "title": "The Python Tutorial",
+    "url": "https://docs.python.org/3/tutorial/index.html",
+    "type": "docs",
+    "level_min": 0,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "basic-python",
+    "title": "W3Schools Python Tutorial",
+    "url": "https://www.w3schools.com/python/default.asp",
+    "type": "practice",
+    "level_min": 0,
+    "level_max": 2,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "pandas",
+    "title": "Pandas Getting Started Tutorials",
+    "url": "https://pandas.pydata.org/docs/getting_started/index.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "pandas",
+    "title": "Pandas User Guide",
+    "url": "https://pandas.pydata.org/docs/user_guide/index.html",
+    "type": "docs",
+    "level_min": 2,
+    "level_max": 4,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "data-cleaning",
+    "title": "Pandas Working with Missing Data",
+    "url": "https://pandas.pydata.org/docs/user_guide/missing_data.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "data-cleaning",
+    "title": "W3Schools Pandas Data Cleaning",
+    "url": "https://www.w3schools.com/python/pandas/pandas_cleaning.asp",
+    "type": "practice",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "data-visualization",
+    "title": "Matplotlib Tutorials",
+    "url": "https://matplotlib.org/stable/tutorials/index.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "data-visualization",
+    "title": "Seaborn User Guide & Tutorial",
+    "url": "https://seaborn.pydata.org/tutorial.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "communicating-results",
+    "title": "Storytelling with Data Articles",
+    "url": "https://www.storytellingwithdata.com/blog",
+    "type": "article",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "communicating-results",
+    "title": "Datawrapper Academy Chart Guides",
+    "url": "https://academy.datawrapper.de/",
+    "type": "article",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "relational-modeling",
+    "title": "PostgreSQL Data Definition Language",
+    "url": "https://www.postgresql.org/docs/current/ddl.html",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "relational-modeling",
+    "title": "W3Schools SQL Foreign Keys",
+    "url": "https://www.w3schools.com/sql/sql_foreignkey.asp",
+    "type": "docs",
+    "level_min": 1,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "basic-git",
+    "title": "Pro Git Book Documentation",
+    "url": "https://git-scm.com/book/en/v2",
+    "type": "docs",
+    "level_min": 0,
+    "level_max": 3,
+    "language": "en",
+    "verified": true
+  },
+  {
+    "skill_slug": "basic-git",
+    "title": "GitHub Getting Started Guide",
+    "url": "https://docs.github.com/en/get-started/getting-started-with-git",
+    "type": "docs",
+    "level_min": 0,
+    "level_max": 2,
+    "language": "en",
+    "verified": true
+  }
+]
