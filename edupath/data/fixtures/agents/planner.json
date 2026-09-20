@@ -1,0 +1,97 @@
+{
+  "objectives": [
+    {
+      "skillSlug": "sql",
+      "description": "Dominar consultas relacionales, filtros avanzados y agregaciones para extraer respuestas de negocio.",
+      "masteryCriteria": [
+        "Escribir consultas SELECT con filtrado WHERE y ordenamiento ORDER BY.",
+        "Realizar agregaciones y agrupaciones con GROUP BY y HAVING.",
+        "Unir tablas usando INNER y LEFT JOIN sin duplicar filas."
+      ]
+    },
+    {
+      "skillSlug": "spreadsheets",
+      "description": "Construir tablas dinámicas y modelos tabulares para analizar información cuantitativa.",
+      "masteryCriteria": [
+        "Aplicar funciones lógicas y de búsqueda condicional.",
+        "Construir tablas dinámicas organizando dimensiones y métricas.",
+        "Crear visualizaciones que comuniquen tendencias clave."
+      ]
+    },
+    {
+      "skillSlug": "basic-python",
+      "description": "Escribir scripts en Python para procesar datos tabulares usando estructuras nativas.",
+      "masteryCriteria": [
+        "Crear bucles y funciones reutilizables.",
+        "Manipular listas, diccionarios y colecciones.",
+        "Importar y depurar módulos estándar de procesamiento."
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "slotId": "slot-w1-sql-resource-1",
+      "title": "Fundamentos de SQL y sintaxis SELECT",
+      "mission": "Explora cómo las consultas básicas interrogan bases de datos relacionales y extraen los primeros hallazgos.",
+      "instructions": "Revisa los capítulos de introducción y anota tres casos de uso donde un filtro WHERE resulta esencial.",
+      "successCriteria": "Identificar correctamente la tabla fuente, las columnas proyectadas y el criterio de filtrado."
+    },
+    {
+      "slotId": "slot-w1-sql-practice-1",
+      "title": "Práctica guiada: Consultas con filtros",
+      "mission": "Pon a prueba tus habilidades formulando consultas sobre un conjunto de transacciones de ventas.",
+      "instructions": "1. Abre la base de datos de práctica.\n2. Escribe una consulta para filtrar pedidos del último trimestre.\n3. Ordena los resultados por volumen total descendente.",
+      "successCriteria": "La consulta se ejecuta sin errores de sintaxis y retorna únicamente las filas esperadas."
+    },
+    {
+      "slotId": "slot-w2-spreadsheets-resource-1",
+      "title": "Análisis rápido con tablas dinámicas",
+      "mission": "Aprende a resumir miles de filas en una vista ejecutiva compacta usando tablas dinámicas.",
+      "instructions": "Observa el tutorial prestando especial atención a la ubicación de campos entre filas, columnas y valores.",
+      "successCriteria": "Comprender la diferencia entre resumir por suma y por recuento en un reporte financiero."
+    },
+    {
+      "slotId": "slot-w2-spreadsheets-practice-1",
+      "title": "Práctica: Creación de tablas dinámicas",
+      "mission": "Transforma un archivo tabular plano en una tabla dinámica con subtotales por departamento.",
+      "instructions": "1. Importa la hoja de cálculo.\n2. Inserta una tabla dinámica.\n3. Agrega departamento en filas y presupuesto en valores.",
+      "successCriteria": "La tabla dinámica muestra la suma de presupuesto agrupada correctamente por departamento."
+    },
+    {
+      "slotId": "slot-w3-sql-practice-1",
+      "title": "Profundización: Joins y agrupaciones",
+      "mission": "Cruza tablas de clientes y pedidos para responder qué segmento genera mayor margen de utilidad.",
+      "instructions": "1. Escribe un INNER JOIN entre clientes y pedidos.\n2. Agrupa por segmento de cliente.\n3. Calcula el promedio de compra.",
+      "successCriteria": "El reporte resultante muestra métricas precisas por cada segmento de cliente."
+    },
+    {
+      "slotId": "slot-w4-sql-project-1",
+      "title": "Proyecto integrador: Auditoría comercial",
+      "mission": "Desarrolla un análisis completo de pedidos para el equipo de operaciones utilizando consultas avanzadas.",
+      "instructions": "1. Diseña una consulta compleja que consolide métricas por región.\n2. Identifica las tres sucursales con menor rotación.\n3. Redacta dos conclusiones accionables basadas en la data.",
+      "successCriteria": "El script SQL completo produce la tabla final y el resumen escrito responde a la pregunta de negocio."
+    }
+  ],
+  "weeklySummaries": [
+    {
+      "week": 1,
+      "headline": "Semana 1: Conquistando el lenguaje de los datos",
+      "note": "Comenzaremos explorando SQL desde la base, consolidando la confianza para escribir consultas claras y efectivas."
+    },
+    {
+      "week": 2,
+      "headline": "Semana 2: Patrones y síntesis en hojas de cálculo",
+      "note": "Esta semana aprenderás a resumir grandes volúmenes de datos con rapidez para identificar tendencias clave."
+    },
+    {
+      "week": 3,
+      "headline": "Semana 3: Relaciones y agregaciones avanzadas",
+      "note": "Conectarás múltiples dimensiones de datos para responder preguntas de negocio de mayor impacto."
+    },
+    {
+      "week": 4,
+      "headline": "Semana 4: Proyecto de consolidación",
+      "note": "Integrarás todo lo aprendido en un caso práctico que demuestra tu capacidad analítica real."
+    }
+  ]
+}

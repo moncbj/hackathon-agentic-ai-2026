@@ -5,3 +5,4 @@ export * from './onboarding';
 export * from './profile-extract';
 export * from './gaps';
 export * from './skill-tree';
+export * from './journey';

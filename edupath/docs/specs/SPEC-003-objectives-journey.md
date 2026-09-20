@@ -1,6 +1,6 @@
 # SPEC-003: Objectives, weekly Journey and activities
 
-- **Status:** pending
+- **Status:** implemented
 - **Priority:** P0
 - **Depends on:** SPEC-002
 - **Capabilities:** F-05, F-06, F-07, F-08, F-09

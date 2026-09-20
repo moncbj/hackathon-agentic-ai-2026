@@ -30,6 +30,24 @@ export async function getActiveLearner(): Promise<LearnerRecord | null> {
   return data;
 }
 
+/**
+ * Retrieves a learner by specific ID.
+ */
+export async function getLearnerById(learnerId: string): Promise<LearnerRecord | null> {
+  const db = getDbClient();
+  const { data, error } = await db
+    .from('learners')
+    .select('*')
+    .eq('id', learnerId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch learner "${learnerId}": ${error.message}`);
+  }
+
+  return data;
+}
+
 export interface LearnerInsert {
   name: string;
   targetRoleId: string;

@@ -1,7 +1,7 @@
 // domain/skill-state.ts
 // Pure, deterministic computation of initial skill states for onboarding (SPEC-001)
 
-import { PREREQ_MIN_LEVEL } from './constants';
+import { MINUTES_PER_LEVEL, PREREQ_MIN_LEVEL, SkillStatus } from './constants';
 
 export interface RoleSkillInput {
   skillId: string;
@@ -97,3 +97,68 @@ export function computeInitialSkillStates(params: {
     };
   });
 }
+
+export interface SkillProgressInput {
+  skillId: string;
+  level: number;
+  status: SkillStatus;
+  progress: number;
+}
+
+export interface ActivityCompletionInput {
+  minutes: number;
+}
+
+export interface UpdatedSkillProgress {
+  skillId: string;
+  level: number;
+  status: SkillStatus;
+  progress: number;
+  readyForAssessment: boolean;
+}
+
+/**
+ * Applies activity completion to update skill progress according to SPEC-003 §3.3.
+ *
+ * Rules:
+ * 1. progressIncrease = round(activity.minutes / (currentGap * MINUTES_PER_LEVEL) * 100)
+ * 2. progress is capped at 100.
+ * 3. If status === 'available' and progress > 0, status becomes 'in_progress'.
+ * 4. readyForAssessment is derived: progress >= 100.
+ * 5. Level does NOT change upon activity completion (Rule R-04).
+ */
+export function applyActivityCompletion(
+  skillState: SkillProgressInput,
+  activity: ActivityCompletionInput,
+  currentGap: number,
+  config?: { minutesPerLevel?: number }
+): UpdatedSkillProgress {
+  const minutesPerLevel = config?.minutesPerLevel ?? MINUTES_PER_LEVEL;
+
+  if (currentGap <= 0) {
+    return {
+      skillId: skillState.skillId,
+      level: skillState.level,
+      status: skillState.status,
+      progress: 100,
+      readyForAssessment: true,
+    };
+  }
+
+  const progressIncrease = Math.round((activity.minutes / (currentGap * minutesPerLevel)) * 100);
+  const newProgress = Math.min(100, skillState.progress + progressIncrease);
+
+  let newStatus = skillState.status;
+  if (newStatus === 'available' && newProgress > 0) {
+    newStatus = 'in_progress';
+  }
+
+  return {
+    skillId: skillState.skillId,
+    level: skillState.level, // Level remains unchanged!
+    status: newStatus,
+    progress: newProgress,
+    readyForAssessment: newProgress >= 100,
+  };
+}
+
