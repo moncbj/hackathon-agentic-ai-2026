@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { countSeededRoles } from '@/lib/db/repositories/roles';
+import { countSeededRoles, getSeededRoleNames } from '@/lib/db/repositories/roles';
 import { generateStructured } from '@/lib/gemini/generate-structured';
 
 export const dynamic = 'force-dynamic';
@@ -13,10 +13,14 @@ const HealthCheckSchema = z.object({
 export async function GET() {
   let dbStatus: 'ok' | 'error' = 'error';
   let seededRolesCount = 0;
+  let seededRoleNames: string[] = [];
 
   // 1. Check Database connection & count seeded roles
   try {
-    seededRolesCount = await countSeededRoles();
+    [seededRolesCount, seededRoleNames] = await Promise.all([
+      countSeededRoles(),
+      getSeededRoleNames(),
+    ]);
     dbStatus = 'ok';
   } catch {
     // Expected when running without Supabase credentials locally
@@ -59,5 +63,6 @@ export async function GET() {
     db: dbStatus,
     ai: aiStatus,
     seededRoles: seededRolesCount,
+    seededRoleNames,
   });
 }

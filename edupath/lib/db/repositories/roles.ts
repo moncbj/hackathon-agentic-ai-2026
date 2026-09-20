@@ -43,6 +43,22 @@ export async function countSeededRoles(): Promise<number> {
   return count ?? 0;
 }
 
+/**
+ * Returns the seeded catalog names for operational UI. Keeping this separate
+ * from the count makes the health payload useful to the frontend without
+ * exposing any learner data.
+ */
+export async function getSeededRoleNames(): Promise<string[]> {
+  const db = getDbClient();
+  const { data, error } = await db.from('roles').select('name').order('name');
+
+  if (error) {
+    throw new Error(`Failed to fetch seeded role names: ${error.message}`);
+  }
+
+  return (data ?? []).map((role) => role.name);
+}
+
 export async function getRoleById(id: string): Promise<RoleRecord | null> {
   const db = getDbClient();
   const { data, error } = await db

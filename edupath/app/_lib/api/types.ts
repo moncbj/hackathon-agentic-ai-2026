@@ -8,6 +8,7 @@ export interface HealthResponse {
   db: 'ok' | 'error';
   ai: 'ok' | 'fixtures' | 'error';
   seededRoles: number;
+  seededRoleNames: string[];
 }
 
 export interface Result<T> {
