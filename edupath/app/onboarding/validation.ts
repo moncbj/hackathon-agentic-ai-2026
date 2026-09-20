@@ -23,10 +23,10 @@ export const TUTOR_DETAIL_LEVELS: readonly TutorDetail[] = ['resumido', 'equilib
 export interface OnboardingFormValues {
     name: string;
     background: string;
-    targetRoleSlug: string;
+    targetRoleId: string;
     /** Kept as a string so the input can be empty while typing. */
     weeklyHours: string;
-    skillLevels: Record<string, SkillLevel>;
+    declaredLevels: Record<string, SkillLevel>;
     extraSkills: ExtraSkill[];
     tutorStyle: TutorStyle;
 }
@@ -36,9 +36,9 @@ export type FormErrors = Record<string, string>;
 export const INITIAL_VALUES: OnboardingFormValues = {
     name: '',
     background: '',
-    targetRoleSlug: '',
+    targetRoleId: '',
     weeklyHours: '',
-    skillLevels: {},
+    declaredLevels: {},
     extraSkills: [],
     tutorStyle: {
         language: 'en',
@@ -64,7 +64,7 @@ export function validateGoalStep(values: OnboardingFormValues): FormErrors {
         errors.background = `Use at most ${LIMITS.backgroundMax} characters.`;
     }
 
-    if (!values.targetRoleSlug) errors.targetRoleSlug = 'Choose a target role.';
+    if (!values.targetRoleId) errors.targetRoleId = 'Choose a target role.';
 
     const hours = values.weeklyHours.trim();
     if (!hours) {
@@ -79,8 +79,8 @@ export function validateGoalStep(values: OnboardingFormValues): FormErrors {
 export function validateSkillsStep(values: OnboardingFormValues): FormErrors {
     const errors: FormErrors = {};
 
-    if (!Object.values(values.skillLevels).every(isSkillLevel)) {
-        errors.skillLevels = 'Every skill needs a level from 0 to 4.';
+    if (!Object.values(values.declaredLevels).every(isSkillLevel)) {
+        errors.declaredLevels = 'Every skill needs a level from 0 to 4.';
     }
 
     if (values.extraSkills.length > LIMITS.extraSkillsMax) {
@@ -125,17 +125,17 @@ export function buildOnboardingRequest(
     values: OnboardingFormValues,
     roleSkillSlugs: string[],
 ): OnboardingRequest {
-    const skillLevels: Record<string, SkillLevel> = {};
+    const declaredLevels: Record<string, SkillLevel> = {};
     for (const slug of roleSkillSlugs) {
-        skillLevels[slug] = values.skillLevels[slug] ?? 0;
+        declaredLevels[slug] = values.declaredLevels[slug] ?? 0;
     }
 
     return {
         name: values.name.trim(),
         background: values.background.trim(),
-        targetRoleSlug: values.targetRoleSlug,
+        targetRoleId: values.targetRoleId,
         weeklyHours: Number(values.weeklyHours),
-        skillLevels,
+        declaredLevels,
         extraSkills: values.extraSkills.map((skill) => ({ name: skill.name.trim(), level: skill.level })),
         tutorStyle: {
             ...values.tutorStyle,

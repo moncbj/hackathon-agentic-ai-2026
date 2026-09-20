@@ -33,11 +33,11 @@ export function StepGoal({ values, errors, roles, onChange }: StepGoalProps) {
                 label="Target role"
                 required
                 placeholder="Choose a role"
-                options={roles.map((role) => ({ value: role.slug, label: role.name }))}
-                value={values.targetRoleSlug}
-                error={errors.targetRoleSlug}
-                hint={roles.find((role) => role.slug === values.targetRoleSlug)?.description}
-                onChange={(event) => onChange({ targetRoleSlug: event.target.value, skillLevels: {} })}
+                options={roles.map((role) => ({ value: role.id, label: role.name }))}
+                value={values.targetRoleId}
+                error={errors.targetRoleId}
+                hint={roles.find((role) => role.id === values.targetRoleId)?.description}
+                onChange={(event) => onChange({ targetRoleId: event.target.value, declaredLevels: {} })}
             />
 
             <TextAreaField

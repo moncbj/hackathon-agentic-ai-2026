@@ -21,14 +21,14 @@ export async function fetchHealth(): Promise<Result<HealthResponse>> {
     
     if (mockState === 'empty') {
       return {
-        data: { db: 'ok', ai: 'ok', seededRoles: 0 },
+        data: { db: 'ok', ai: 'ok', seededRoles: 0, seededRoleNames: [] },
         error: null,
       };
     }
 
     // Default 'ok' mock response
     return {
-      data: { db: 'ok', ai: 'fixtures', seededRoles: 1 },
+      data: { db: 'ok', ai: 'fixtures', seededRoles: 1, seededRoleNames: ['Data Analyst (junior)'] },
       error: null,
     };
   }

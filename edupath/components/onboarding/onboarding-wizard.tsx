@@ -8,6 +8,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { Spinner } from "@/components/ui/spinner";
 import { StepGoal } from "@/components/onboarding/step-goal";
+import { StepSkills } from "@/components/onboarding/step-skills";
+import { StepTutorStyle } from "@/components/onboarding/step-tutor-style";
 import { Stepper } from "@/components/onboarding/stepper";
 import { fetchRoles } from "@/app/_lib/api/onboarding";
 import type { Role } from "@/app/_lib/api/onboarding-types";
@@ -45,7 +47,7 @@ export function OnboardingWizard() {
             // With a single role there is nothing to choose: preselect it.
             if (data.roles.length === 1) {
                 const onlyRole = data.roles[0];
-                setValues((current) => (current.targetRoleSlug ? current : { ...current, targetRoleSlug: onlyRole.slug }));
+                setValues((current) => (current.targetRoleId ? current : { ...current, targetRoleId: onlyRole.id }));
             }
         });
 
@@ -140,11 +142,8 @@ export function OnboardingWizard() {
                         <StepGoal values={values} errors={errors} roles={rolesState.roles} onChange={handleChange} />
                     )}
 
-                    {step > 0 && (
-                        <Alert variant="info" title={`${STEPS[step]} step coming next`}>
-                            This step is built in the next commit.
-                        </Alert>
-                    )}
+                    {step === 1 && <StepSkills values={values} errors={errors} role={rolesState.roles.find((role) => role.id === values.targetRoleId)} onChange={handleChange} />}
+                    {step === 2 && <StepTutorStyle values={values} errors={errors} onChange={handleChange} />}
 
                     <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
                         <Button type="button" variant="secondary" onClick={handleBack} disabled={step === 0}>

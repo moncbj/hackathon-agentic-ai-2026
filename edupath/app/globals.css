@@ -61,3 +61,11 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   @apply bg-slate-50 text-slate-900;
 }
+
+@keyframes node-pop {
+  0% { transform: scale(.92); opacity: .45; }
+  70% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.node-pop { animation: node-pop .35s ease-out both; }

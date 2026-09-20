@@ -8,8 +8,8 @@
 
 - **Needed by:** SPEC-000, acceptance criterion 1 (the home page shows the name of the seeded role).
 - **Problem:** the documented response only has `seededRoles: number`, so the UI can show a count but not the role name.
-- **Proposal:** add an optional field to the response, for example `seededRoleNames: string[]`.
-- **Status:** pending decision by the Backend Owner. Until then the home page shows only the count.
+- **Implemented response:** `seededRoleNames: string[]` is now returned alongside `seededRoles`.
+- **Status:** implemented in SPEC-000; the frontend can render the seeded role name without a second request.
 
 ### 2. `GET /api/skill-tree`: category of each skill
 

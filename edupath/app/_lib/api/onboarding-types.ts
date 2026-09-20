@@ -4,6 +4,7 @@
 export type SkillLevel = 0 | 1 | 2 | 3 | 4;
 
 export interface RoleSkill {
+    id: string;
     slug: string;
     name: string;
     description: string;
@@ -62,9 +63,9 @@ export interface ExtraSkill {
 export interface OnboardingRequest {
     name: string;
     background: string;
-    targetRoleSlug: string;
+    targetRoleId: string;
     weeklyHours: number;
-    skillLevels: Record<string, SkillLevel>;
+    declaredLevels: Record<string, SkillLevel>;
     extraSkills: ExtraSkill[];
     tutorStyle: TutorStyle;
 }

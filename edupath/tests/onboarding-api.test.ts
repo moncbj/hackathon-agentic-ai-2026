@@ -31,9 +31,9 @@ afterEach(() => {
 const sampleRequest: OnboardingRequest = {
     name: 'Alex',
     background: '',
-    targetRoleSlug: MOCK_ROLE.slug,
+    targetRoleId: MOCK_ROLE.id,
     weeklyHours: 8,
-    skillLevels: {},
+    declaredLevels: {},
     extraSkills: [],
     tutorStyle: { language: 'en', tone: 'cercano', detailLevel: 'equilibrado', useAnalogies: false, freeInstructions: '' },
 };

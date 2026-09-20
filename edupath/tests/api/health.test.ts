@@ -19,6 +19,7 @@ describe('API: GET /api/health', () => {
 
     // Mock countSeededRoles to simulate healthy database
     vi.spyOn(rolesRepo, 'countSeededRoles').mockResolvedValue(1);
+    vi.spyOn(rolesRepo, 'getSeededRoleNames').mockResolvedValue(['Data Analyst (junior)']);
 
     const response = await GET();
     expect(response.status).toBe(200);
@@ -28,6 +29,7 @@ describe('API: GET /api/health', () => {
       db: 'ok',
       ai: 'fixtures',
       seededRoles: 1,
+      seededRoleNames: ['Data Analyst (junior)'],
     });
   });
 
@@ -36,6 +38,7 @@ describe('API: GET /api/health', () => {
 
     // Simulate DB connection failure
     vi.spyOn(rolesRepo, 'countSeededRoles').mockRejectedValue(new Error('Connection timeout'));
+    vi.spyOn(rolesRepo, 'getSeededRoleNames').mockResolvedValue([]);
 
     const response = await GET();
     expect(response.status).toBe(200);
@@ -45,6 +48,7 @@ describe('API: GET /api/health', () => {
       db: 'error',
       ai: 'fixtures',
       seededRoles: 0,
+      seededRoleNames: [],
     });
   });
 
@@ -60,5 +64,7 @@ describe('API: GET /api/health', () => {
 
     expect(body).toHaveProperty('seededRoles');
     expect(typeof body.seededRoles).toBe('number');
+    expect(body).toHaveProperty('seededRoleNames');
+    expect(Array.isArray(body.seededRoleNames)).toBe(true);
   });
 });
