@@ -1,0 +1,11 @@
+{
+  "answer": "¡Hola! He revisado tu plan de estudio y veo que estás avanzando con buen ritmo en tu meta de **Data Analyst**.\n\nEsta semana tienes programadas actividades prácticas de **SQL** enfocadas en filtros y agregaciones. Recuerda que dominar `WHERE` y `GROUP BY` es como aprender a ordenar una biblioteca: te permite encontrar exactamente los datos que necesitas sin perderte en el desorden.\n\n¿Quieres que repasemos un ejemplo práctico antes de que comiences tu misión?",
+  "followUps": [
+    "¿Qué actividades tengo pendientes esta semana?",
+    "¿Por qué es importante SQL para mi rol?",
+    "¿Cómo puedo evaluar mi nivel actual?"
+  ],
+  "suggestedAction": {
+    "type": "open_journey"
+  }
+}

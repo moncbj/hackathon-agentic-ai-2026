@@ -667,5 +667,237 @@ Marks an activity as skipped (`status = 'skipped'`) and returns the accumulated 
 - **404 Not Found:** `{"error": "No active learner profile found", "code": "NO_LEARNER"}`
 - **500 Internal Server Error:** Database update error.
 
+---
 
+## 6. Assessments & Replanning (SPEC-004)
 
+### `POST /api/assessments`
+
+Generates or reuses a 5-question objective assessment for an eligible learner skill.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Request Body:** `{ "skillSlug": "sql" }`
+- **Response (201 Created):** `{ "assessment": { "id", "kind", "targetLevel", "skillSlug", "skillName", "status", "createdAt" }, "questions": [...] }`
+
+### `POST /api/assessments/:id/submit`
+
+Submits answers for evaluation, scores the assessment, measures level, updates skill state, and returns feedback.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Request Body:** `{ "answers": { "q1": "opt-a", "q2": "..." } }`
+- **Response (200 OK):** `{ "score", "measuredLevel", "passed", "newLevel", "verification", "status", "itemFeedback", "overallFeedback", "strugglesWith", "replanRecommended", "stateChanges" }`
+
+### `POST /api/replan`
+
+Adapts the learning journey based on recent assessment results, skill state transitions, or skipped activities.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Response (201 Created):** Updated journey object with version, changes, and rescheduled activities.
+
+---
+
+## 7. Tutor Agent (SPEC-005)
+
+### `POST /api/tutor/chat`
+
+Converses with the learner's path in natural language, grounded on the deterministic learner snapshot and study notebooks.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Cache:** `no-store` (force-dynamic)
+- **Persistence:** Chat history is stored in client session only; no conversation rows are written to the database.
+
+#### Request Body
+
+```json
+{
+  "question": "¿Qué actividades tengo pendientes esta semana?",
+  "history": [
+    { "role": "user", "content": "Hola" },
+    { "role": "assistant", "content": "¡Hola! ¿En qué te ayudo hoy?" }
+  ],
+  "focusSkillSlug": "sql",
+  "notebookIds": ["nb-uuid-1"]
+}
+```
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `question` | `string` | Yes | Learner question (1–1000 characters) |
+| `history` | `array` | No | Up to 10 previous turns `{ role, content }` (each content max 1000 chars) |
+| `focusSkillSlug` | `string` | No | Catalog skill slug to focus context |
+| `notebookIds` | `string[]` | No | Explicit notebook IDs to include in context (up to 2 notebooks, each content max 4000 chars) |
+
+#### Response (200 OK)
+
+```json
+{
+  "answer": "Esta semana tienes una misión práctica de **SQL** enfocada en filtros WHERE...",
+  "followUps": [
+    "¿Cómo practico filtros condicionales?",
+    "¿Por qué es clave SQL para mi meta?"
+  ],
+  "suggestedAction": {
+    "type": "open_journey"
+  }
+}
+```
+
+#### Field Specifications
+
+| Field | Type | Description |
+|---|---|---|
+| `answer` | `string` | Helpful Markdown response (max 1500 chars), grounded on snapshot |
+| `followUps` | `string[]` | 0 to 3 suggested follow-up questions |
+| `suggestedAction` | `object \| null` | Optional validated action: `type` (`start_assessment` \| `open_skill` \| `open_journey` \| `open_notebook`), `skillSlug?`, `notebookId?` |
+
+#### Error Responses
+
+- **400 Bad Request:** Missing or empty question, question > 1000 characters.
+- **404 Not Found:** No active learner profile found.
+- **502 Bad Gateway:** AI Tutor Agent unavailable (`{"error": "...", "code": "AI_ERROR"}`).
+
+---
+
+## 8. Progress Reports (SPEC-005)
+
+### `POST /api/reports`
+
+Computes a deterministic progress report across all four learning quadrants (acquired, inProgress, struggling, remainingGaps, toVerify, activity, assessments, journey, nextStepCandidates), calls the Tutor Agent to generate a motivating headline/narrative and rewrite next steps, persists the report in the database, and returns it. If the AI call fails or returns unrecognized candidate IDs, deterministic fallback texts are stored and returned.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Cache:** `no-store` (force-dynamic)
+
+#### Response (201 Created)
+
+```json
+{
+  "id": "rep-uuid-1",
+  "learner_id": "learner-uuid",
+  "data": {
+    "acquired": [{ "slug": "spreadsheets", "name": "Spreadsheets", "level": 3, "verification": "self_reported" }],
+    "inProgress": [{ "slug": "sql", "name": "SQL", "level": 1, "requiredLevel": 3, "progress": 50 }],
+    "struggling": [],
+    "remainingGaps": [{ "slug": "sql", "name": "SQL", "level": 1, "requiredLevel": 3, "gap": 2, "priority": 10 }],
+    "toVerify": [{ "slug": "spreadsheets", "name": "Spreadsheets", "level": 3, "weight": 4 }],
+    "activity": { "completedThisWeek": 1, "totalThisWeek": 2, "completedOverall": 3, "skippedOverall": 0 },
+    "assessments": { "totalCount": 1, "lastThree": [{ "skill": "SQL", "score": 0.8, "date": "2026-09-18T10:00:00Z" }] },
+    "journey": { "currentVersion": 1, "latestChangeSummary": "Initial plan created." },
+    "nextStepCandidates": [
+      { "candidateId": "continue_week", "title": "Continue week", "actionType": "open_journey", "defaultText": "Continue with the week's pending activities." }
+    ]
+  },
+  "narrative": {
+    "headline": "Progreso constante en tu ruta analítica",
+    "narrative": "Has avanzado significativamente en tus destrezas...",
+    "nextSteps": [
+      { "candidateId": "continue_week", "text": "Completa tus actividades de esta semana para consolidar tus filtros SQL." }
+    ]
+  },
+  "created_at": "2026-09-20T12:00:00Z"
+}
+```
+
+### `GET /api/reports`
+
+Retrieves the latest 5 progress reports generated for the active learner, sorted with the newest report first.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `GET`
+- **Cache:** `no-store` (force-dynamic)
+
+#### Response (200 OK)
+
+```json
+[
+  {
+    "id": "rep-uuid-1",
+    "learner_id": "learner-uuid",
+    "data": { ... },
+    "narrative": { ... },
+    "created_at": "2026-09-20T12:00:00Z"
+  }
+]
+```
+
+---
+
+## 9. Minimal Notebooks (SPEC-005)
+
+### `GET /api/notebooks`
+
+Lists all notebooks belonging to the active learner, with their associated catalog skills enriched with current level and status.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `GET`
+
+#### Response (200 OK)
+
+```json
+[
+  {
+    "id": "nb-uuid-1",
+    "learner_id": "learner-uuid",
+    "title": "SQL Join Cheatsheet",
+    "content": "INNER JOIN: matching keys only...",
+    "skills": [
+      { "id": "skill-sql", "slug": "sql", "name": "SQL", "level": 2, "status": "in_progress" }
+    ],
+    "created_at": "2026-09-20T10:00:00Z"
+  }
+]
+```
+
+### `POST /api/notebooks`
+
+Creates a new study notebook associated with at least one catalog skill.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Request Body:**
+
+```json
+{
+  "title": "SQL Join Cheatsheet",
+  "content": "INNER JOIN: matching keys only...",
+  "skillIds": ["uuid-of-sql-skill"]
+}
+```
+
+#### Constraints
+- `title`: 1–80 characters.
+- `content`: max 20,000 characters.
+- `skillIds`: non-empty array of valid catalog skill UUIDs.
+
+#### Response (201 Created)
+
+Same schema as `GET /api/notebooks` item.
+
+### `GET /api/notebooks/:id`
+
+Retrieves a single notebook by ID including its associated skills.
+
+- **Authentication:** None (Validates ownership by active learner)
+- **Method:** `GET`
+- **Response (200 OK):** Notebook item object.
+
+### `PATCH /api/notebooks/:id`
+
+Updates a notebook's title, content, and/or associated skill associations.
+
+- **Authentication:** None (Validates ownership by active learner)
+- **Method:** `PATCH`
+- **Request Body:** `{ "title"?: string, "content"?: string, "skillIds"?: string[] }`
+- **Response (200 OK):** Updated notebook item object.
+
+### `DELETE /api/notebooks/:id`
+
+Deletes a notebook and its skill associations.
+
+- **Authentication:** None (Validates ownership by active learner)
+- **Method:** `DELETE`
+- **Response (200 OK):** `{ "success": true }`
