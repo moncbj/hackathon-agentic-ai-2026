@@ -1,2 +1,5 @@
-// Placeholder for assessment agent schema (SPEC-004)
-export {};
+import { z } from 'zod';
+const Mcq=z.object({id:z.string().min(1),text:z.string().min(1)});
+export const AssessmentQuestionSchema=z.discriminatedUnion('type',[z.object({id:z.string().min(1),type:z.literal('multiple_choice'),prompt:z.string().min(1),options:z.array(Mcq).length(4),correctOptionId:z.string().min(1),explanation:z.string()}),z.object({id:z.string().min(1),type:z.literal('short_answer'),prompt:z.string().min(1),rubric:z.object({criteria:z.array(z.object({description:z.string(),points:z.number().positive()})).min(1),maxPoints:z.number().positive()}),explanation:z.string()})]);
+export const AssessmentGenerateOutputSchema=z.object({questions:z.array(AssessmentQuestionSchema).length(5)}).superRefine((x,c)=>{const m=x.questions.filter(q=>q.type==='multiple_choice');if(m.length!==3)c.addIssue({code:'custom',message:'exactly 3 multiple choice'});if(new Set(x.questions.map(q=>q.id)).size!==5)c.addIssue({code:'custom',message:'unique ids'});for(const q of m)if(!q.options.some(o=>o.id===q.correctOptionId))c.addIssue({code:'custom',message:'correct option required'});});
+export type AssessmentGenerateOutput=z.infer<typeof AssessmentGenerateOutputSchema>;
