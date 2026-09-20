@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  // TODO: Conectar con GET /api/learner cuando el endpoint esté listo
-  redirect("/onboarding");
+  // El dashboard usa datos de demostración mientras GET /api/learner queda disponible.
+  redirect("/dashboard");
 }
