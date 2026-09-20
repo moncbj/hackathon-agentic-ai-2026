@@ -1,5 +1,5 @@
 // @ts-expect-error pdf-parse lacks export maps for internal path but lib/pdf-parse.js avoids index.js debug bug
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 
 export interface ExtractedText {
