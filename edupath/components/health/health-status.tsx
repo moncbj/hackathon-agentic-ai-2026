@@ -111,6 +111,11 @@ function HealthDetails({ health }: { health: HealthResponse }) {
                             {health.seededRoles === 1 ? "role loaded" : "roles loaded"}
                         </span>
                     </p>
+                    {health.seededRoleNames.length > 0 && (
+                        <p className="text-sm font-medium text-slate-600">
+                            {health.seededRoleNames.join(", ")}
+                        </p>
+                    )}
                 </StatusCard>
             </div>
         </div>
