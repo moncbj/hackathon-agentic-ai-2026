@@ -1,0 +1,42 @@
+{
+  "proposedSkills": [
+    {
+      "skillSlug": "basic-python",
+      "proposedLevel": 2,
+      "rationale": "Menciona 2 años de experiencia con Python y scripts de automatización",
+      "confidence": "medium"
+    },
+    {
+      "skillSlug": "sql",
+      "proposedLevel": 1,
+      "rationale": "Menciona consultas básicas en una base de datos universitaria",
+      "confidence": "low"
+    },
+    {
+      "skillSlug": "spreadsheets",
+      "proposedLevel": 3,
+      "rationale": "Describe uso avanzado de Excel con tablas dinámicas y VLOOKUP",
+      "confidence": "high"
+    },
+    {
+      "skillSlug": "descriptive-statistics",
+      "proposedLevel": 1,
+      "rationale": "Conoce conceptos de media y mediana del curso de estadística",
+      "confidence": "low"
+    },
+    {
+      "skillSlug": "data-visualization",
+      "proposedLevel": 1,
+      "rationale": "Ha creado gráficos básicos en Excel para reportes universitarios",
+      "confidence": "low"
+    }
+  ],
+  "unmappedSkills": [
+    {
+      "name": "Docker",
+      "proposedLevel": 1,
+      "rationale": "Menciona uso básico de contenedores para un proyecto"
+    }
+  ],
+  "summary": "El perfil muestra experiencia sólida en hojas de cálculo y conocimientos básicos de programación en Python. Se recomienda verificar el nivel de SQL con una evaluación."
+}

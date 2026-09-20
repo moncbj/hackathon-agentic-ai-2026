@@ -1,6 +1,7 @@
 # SPEC-001: Onboarding and Learner Profile
 
-- **Status:** pending
+- **Status:** implemented
+
 - **Priority:** P0
 - **Depends on:** SPEC-000
 - **Capabilities:** F-01, F-02, F-16

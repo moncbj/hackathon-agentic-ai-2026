@@ -42,3 +42,18 @@ export async function countSeededRoles(): Promise<number> {
   }
   return count ?? 0;
 }
+
+export async function getRoleById(id: string): Promise<RoleRecord | null> {
+  const db = getDbClient();
+  const { data, error } = await db
+    .from('roles')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch role with id "${id}": ${error.message}`);
+  }
+  return data;
+}
+
