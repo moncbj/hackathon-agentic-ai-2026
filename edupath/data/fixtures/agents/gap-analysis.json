@@ -1,0 +1,30 @@
+{
+  "summary": "Tienes una base prometedora para el rol de Data Analyst Junior, especialmente en hojas de cálculo. Sin embargo, para alcanzar el perfil requerido es crucial fortalecer SQL y Python, que son pilares fundamentales para el análisis y limpieza de datos.",
+  "perSkill": [
+    {
+      "skillSlug": "sql",
+      "explanation": "Cuentas con nivel 1 y el rol requiere nivel 3. Necesitas dominar consultas complejas, agregaciones y joins.",
+      "whyItMatters": "SQL es la herramienta principal de extracción de datos y es prerrequisito para modelado relacional."
+    },
+    {
+      "skillSlug": "basic-python",
+      "explanation": "Estás en nivel 1 frente al nivel 2 requerido. Debes afianzar estructuras de datos y funciones.",
+      "whyItMatters": "Python es la base necesaria antes de aprender manipulación avanzada con Pandas."
+    },
+    {
+      "skillSlug": "pandas",
+      "explanation": "Aún no has iniciado en Pandas (nivel 0 de 2). Es esencial para análisis exploratorio.",
+      "whyItMatters": "Permite procesar conjuntos de datos y preparar la información para visualización y limpieza."
+    },
+    {
+      "skillSlug": "data-cleaning",
+      "explanation": "Se requiere nivel 3 para transformar datos sucios en información confiable.",
+      "whyItMatters": "La mayor parte del tiempo de un analista se dedica a asegurar la calidad de los datos."
+    }
+  ],
+  "recommendedFocus": [
+    "sql",
+    "basic-python",
+    "data-cleaning"
+  ]
+}
