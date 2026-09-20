@@ -1,6 +1,6 @@
 # SPEC-002: Skill Gap Analysis and skill tree
 
-- **Status:** pending
+- **Status:** implemented
 - **Priority:** P0
 - **Depends on:** SPEC-000, SPEC-001
 - **Capabilities:** F-03, F-04, F-14

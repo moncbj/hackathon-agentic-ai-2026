@@ -290,3 +290,170 @@ Shape identical to the `POST /api/onboarding` 201 response body:
 - **404 Not Found:** `{"error": "No learner profile found"}` when no active learner has been created.
 - **500 Internal Server Error:** Database query failure.
 
+---
+
+## 4. Skill Tree & Gap Analysis (SPEC-002)
+
+### `GET /api/skill-tree`
+
+Retrieves the complete deterministic skill-tree graph for the active learner's target role. Makes zero AI calls and zero database mutations.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `GET`
+- **Cache:** `no-store` (force-dynamic)
+
+#### Response (200 OK)
+
+```json
+{
+  "nodes": [
+    {
+      "id": "uuid",
+      "slug": "spreadsheets",
+      "name": "Spreadsheets",
+      "level": 3,
+      "requiredLevel": 3,
+      "gap": 0,
+      "weight": 4,
+      "verification": "self_reported",
+      "status": "acquired",
+      "progress": 0,
+      "needsVerification": true,
+      "depth": 0
+    },
+    {
+      "id": "uuid",
+      "slug": "sql",
+      "name": "SQL",
+      "level": 1,
+      "requiredLevel": 3,
+      "gap": 2,
+      "weight": 5,
+      "verification": "self_reported",
+      "status": "in_progress",
+      "progress": 25,
+      "needsVerification": false,
+      "depth": 1
+    }
+  ],
+  "edges": [
+    {
+      "source": "uuid-prerequisite-skill-id",
+      "target": "uuid-dependent-skill-id"
+    }
+  ]
+}
+```
+
+#### Field Specifications
+
+| Field | Type | Description |
+|---|---|---|
+| `nodes` | `SkillTreeNode[]` | Array of role skills sorted deterministically by `depth ASC`, `name ASC`, `slug ASC` |
+| `nodes[].id` | `string` | Stable UUID of the skill |
+| `nodes[].slug` | `string` | Unique alphanumeric slug of the skill |
+| `nodes[].name` | `string` | Human-readable skill name |
+| `nodes[].level` | `number` | Learner's current level (0–4) |
+| `nodes[].requiredLevel` | `number` | Target role's required level (0–4) |
+| `nodes[].gap` | `number` | Deterministic gap: `max(0, requiredLevel - level)` |
+| `nodes[].weight` | `number` | Skill importance weight in the role |
+| `nodes[].verification` | `"self_reported" \| "verified"` | Verification status of the current level |
+| `nodes[].status` | `"locked" \| "available" \| "in_progress" \| "acquired" \| "struggling"` | Learner skill progression status |
+| `nodes[].progress` | `number` | Progress percentage towards next level (0–100) |
+| `nodes[].needsVerification` | `boolean` | `true` if `gap === 0 && verification === 'self_reported' && weight >= 4` |
+| `nodes[].depth` | `number` | Longest prerequisite path from root (0 = root node) |
+| `edges` | `SkillTreeEdge[]` | Deduplicated prerequisite connections sorted by `source ASC`, `target ASC` |
+| `edges[].source` | `string` | Skill ID of the prerequisite |
+| `edges[].target` | `string` | Skill ID of the dependent skill |
+
+#### Error Responses
+
+- **400 Bad Request:** `{"error": "Active learner has no target role specified", "code": "NO_TARGET_ROLE"}`
+- **404 Not Found:** `{"error": "No active learner profile found", "code": "NO_LEARNER"}`
+- **404 Not Found:** `{"error": "Target role \"...\" not found", "code": "ROLE_NOT_FOUND"}`
+- **500 Internal Server Error:** Unexpected database or graph assembly failure.
+
+---
+
+### `GET /api/gaps`
+
+Computes deterministic gap analysis and delivers a contextualized explanation from the Gap Analysis Agent. Cached in database using a canonical SHA-256 hash. If the AI agent fails or times out, the endpoint falls back gracefully to HTTP 200 with deterministic data intact and `agentExplanation: null`.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `GET`
+- **Cache:** `no-store` (force-dynamic, cached at database level in `gap_analyses` by canonical input hash)
+
+#### Response (200 OK)
+
+```json
+{
+  "summary": {
+    "totalSkills": 11,
+    "acquired": 1,
+    "withGap": 10,
+    "needsVerification": 1
+  },
+  "gaps": [
+    {
+      "skillSlug": "sql",
+      "name": "SQL",
+      "level": 1,
+      "requiredLevel": 3,
+      "gap": 2,
+      "priority": 12.5,
+      "needsVerification": false
+    }
+  ],
+  "topPriorities": [
+    {
+      "skillSlug": "sql",
+      "name": "SQL",
+      "gap": 2,
+      "priority": 12.5
+    }
+  ],
+  "unverified": [
+    {
+      "skillSlug": "spreadsheets",
+      "name": "Spreadsheets",
+      "level": 3
+    }
+  ],
+  "agentExplanation": {
+    "summary": "Tienes una buena base en hojas de cálculo, pero requieres afianzar SQL y Python para el rol.",
+    "perSkill": [
+      {
+        "skillSlug": "sql",
+        "explanation": "Cuentas con nivel 1 y el rol exige nivel 3 para consultas y agregaciones avanzadas.",
+        "whyItMatters": "Es la base indispensable para extracción y modelado de datos en el negocio."
+      }
+    ],
+    "recommendedFocus": [
+      "sql",
+      "basic-python"
+    ]
+  }
+}
+```
+
+#### Field Specifications
+
+| Field | Type | Description |
+|---|---|---|
+| `summary` | `object` | Aggregate counts: `totalSkills`, `acquired`, `withGap`, `needsVerification` |
+| `gaps` | `object[]` | All role skills ordered by `priority DESC`, `depth ASC`, `name ASC`, `slug ASC` |
+| `topPriorities` | `object[]` | At most 5 skills with `priority > 0`, preserving priority order |
+| `unverified` | `object[]` | All skills with `needsVerification === true` |
+| `agentExplanation` | `object \| null` | Natural-language explanation from Gap Analysis Agent (or `null` on AI error or when zero gaps/unverified skills exist) |
+| `agentExplanation.summary` | `string` | Overall diagnosis summary (2–4 sentences, max 500 chars) |
+| `agentExplanation.perSkill` | `object[]` | Sanitized per-skill breakdown (max 250 chars explanation, max 200 chars whyItMatters) |
+| `agentExplanation.recommendedFocus` | `string[]` | Up to 3 priority skill slugs recommended for immediate study |
+
+#### Error Responses
+
+- **400 Bad Request:** `{"error": "Active learner has no target role specified", "code": "NO_TARGET_ROLE"}`
+- **404 Not Found:** `{"error": "No active learner profile found", "code": "NO_LEARNER"}`
+- **404 Not Found:** `{"error": "Target role \"...\" not found", "code": "ROLE_NOT_FOUND"}`
+- **500 Internal Server Error:** Unexpected database failure.
+
+
