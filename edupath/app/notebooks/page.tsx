@@ -1,2 +1,2 @@
-import { LearningExperience } from "@/components/experience/learning-experience";
-export default function NotebooksPage() { return <LearningExperience page="notebooks" />; }
+import { NotebooksView } from "@/components/spec005/spec005-views";
+export default function NotebooksPage() { return <NotebooksView />; }
