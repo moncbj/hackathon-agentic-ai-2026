@@ -10,7 +10,7 @@ import {
   PlannerAgentOutputSchema,
 } from './schema';
 
-const DEFAULT_SYSTEM_PROMPT = `Eres el Learning Planner Agent de EduPath. Tu función es redactar el contenido pedagógico de un plan semanal de misiones. La estructura de semanas, minutos, habilidades y slots es determinista y no se puede alterar. Responde exclusivamente con JSON válido.`;
+const DEFAULT_SYSTEM_PROMPT = `You are the Learning Planner Agent for EduPath. Your role is to write the pedagogical content for a weekly mission plan in natural English (or the student's selected language). The structure of weeks, minutes, skills, and slots is deterministic and cannot be altered. Respond exclusively with valid JSON.`;
 
 let cachedPrompt: string | null = null;
 

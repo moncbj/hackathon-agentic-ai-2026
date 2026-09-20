@@ -1,25 +1,25 @@
 {
-  "summary": "Tienes una base prometedora para el rol de Data Analyst Junior, especialmente en hojas de cálculo. Sin embargo, para alcanzar el perfil requerido es crucial fortalecer SQL y Python, que son pilares fundamentales para el análisis y limpieza de datos.",
+  "summary": "You have a promising foundation for the Junior Data Analyst role, especially in spreadsheets. However, to reach the target profile it is crucial to strengthen SQL and Python, which are essential pillars for data analysis and cleaning.",
   "perSkill": [
     {
       "skillSlug": "sql",
-      "explanation": "Cuentas con nivel 1 y el rol requiere nivel 3. Necesitas dominar consultas complejas, agregaciones y joins.",
-      "whyItMatters": "SQL es la herramienta principal de extracción de datos y es prerrequisito para modelado relacional."
+      "explanation": "You are at level 1 and the role requires level 3. You need to master complex queries, aggregations, and joins.",
+      "whyItMatters": "SQL is the primary data extraction tool and is a prerequisite for relational modeling."
     },
     {
       "skillSlug": "basic-python",
-      "explanation": "Estás en nivel 1 frente al nivel 2 requerido. Debes afianzar estructuras de datos y funciones.",
-      "whyItMatters": "Python es la base necesaria antes de aprender manipulación avanzada con Pandas."
+      "explanation": "You are at level 1 versus the required level 2. You should solidify data structures and functions.",
+      "whyItMatters": "Python is the necessary base before learning advanced manipulation with Pandas."
     },
     {
       "skillSlug": "pandas",
-      "explanation": "Aún no has iniciado en Pandas (nivel 0 de 2). Es esencial para análisis exploratorio.",
-      "whyItMatters": "Permite procesar conjuntos de datos y preparar la información para visualización y limpieza."
+      "explanation": "You have not started Pandas yet (level 0 of 2). It is essential for exploratory analysis.",
+      "whyItMatters": "It allows you to process datasets and prepare data for visualization and cleaning."
     },
     {
       "skillSlug": "data-cleaning",
-      "explanation": "Se requiere nivel 3 para transformar datos sucios en información confiable.",
-      "whyItMatters": "La mayor parte del tiempo de un analista se dedica a asegurar la calidad de los datos."
+      "explanation": "Level 3 is required to transform raw, messy data into reliable information.",
+      "whyItMatters": "Most of an analyst's time is dedicated to ensuring data quality."
     }
   ],
   "recommendedFocus": [
