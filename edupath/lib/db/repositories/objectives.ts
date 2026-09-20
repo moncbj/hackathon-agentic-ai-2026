@@ -100,3 +100,52 @@ export async function getActiveObjectives(learnerId: string): Promise<ObjectiveR
   return (data as unknown as ObjectiveRecord[]) ?? [];
 }
 
+/**
+ * Updates the status of an objective by ID.
+ */
+export async function updateObjectiveStatus(
+  objectiveId: string,
+  status: 'active' | 'done' | 'dropped'
+): Promise<ObjectiveRecord> {
+  const db = getDbClient();
+  const { data, error } = await db
+    .from('objectives')
+    .update({ status })
+    .eq('id', objectiveId)
+    .select(`
+      *,
+      skill:skills(id, slug, name)
+    `)
+    .single();
+
+  if (error || !data) {
+    throw new Error(`Failed to update objective status for objective "${objectiveId}": ${error?.message}`);
+  }
+
+  return data as unknown as ObjectiveRecord;
+}
+
+/**
+ * Updates status of all active objectives for a learner and specific skill (e.g. mark done or dropped).
+ */
+export async function updateObjectivesStatusByLearnerAndSkill(
+  learnerId: string,
+  skillId: string,
+  status: 'active' | 'done' | 'dropped'
+): Promise<void> {
+  const db = getDbClient();
+  const { error } = await db
+    .from('objectives')
+    .update({ status })
+    .eq('learner_id', learnerId)
+    .eq('skill_id', skillId)
+    .eq('status', 'active');
+
+  if (error) {
+    throw new Error(
+      `Failed to update objective statuses for learner "${learnerId}", skill "${skillId}": ${error.message}`
+    );
+  }
+}
+
+

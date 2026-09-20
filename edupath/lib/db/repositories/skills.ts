@@ -62,3 +62,19 @@ export async function getSkillsByRole(roleId: string): Promise<RoleSkillRecord[]
     weight: row.weight,
   }));
 }
+
+export async function getSkillBySlug(slug: string): Promise<SkillRecord | null> {
+  const db = getDbClient();
+  const { data, error } = await db
+    .from('skills')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch skill by slug "${slug}": ${error.message}`);
+  }
+
+  return data ?? null;
+}
+

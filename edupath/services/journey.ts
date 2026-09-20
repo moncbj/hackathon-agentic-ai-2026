@@ -154,7 +154,7 @@ export interface SkipActivityResponse {
  * - SkillSlugs must exist in scheduled skills
  * - Text constraints are checked
  */
-function validatePlannerAgentOutput(
+export function validatePlannerAgentOutput(
   output: PlannerAgentOutput,
   skeleton: JourneySkeleton
 ): boolean {
@@ -202,7 +202,7 @@ function validatePlannerAgentOutput(
  * is unavailable, times out, or produces invalid output.
  * Preserves exact deterministic decisions, skill, week, minutes, and resources.
  */
-function buildDeterministicMinimumFallback(
+export function buildDeterministicMinimumFallback(
   skeleton: JourneySkeleton
 ): PlannerAgentOutput {
   const objectives = skeleton.scheduledSkills.map((s) => ({

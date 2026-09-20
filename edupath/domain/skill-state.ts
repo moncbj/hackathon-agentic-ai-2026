@@ -162,3 +162,107 @@ export function applyActivityCompletion(
   };
 }
 
+export interface SkillStateForRecompute {
+  skillId: string;
+  level: number;
+  status: SkillStatus;
+  verification?: string;
+  progress?: number;
+  consecutiveFailures?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * Recomputes locked and available statuses for skills based on updated prerequisite levels.
+ * SPEC-004 §3.3:
+ * Recalculates locked and available without touching acquired, struggling, or in_progress.
+ * This ensures that a skill rising to PREREQ_MIN_LEVEL immediately unlocks its dependent skills.
+ */
+export function recomputeStatuses<T extends SkillStateForRecompute>(
+  allSkillStates: T[],
+  prerequisites: PrerequisiteInput[],
+  _roleSkills?: RoleSkillInput[],
+  config?: { prereqMinLevel?: number }
+): T[] {
+  const prereqMinLevel = config?.prereqMinLevel ?? PREREQ_MIN_LEVEL;
+
+  // Map of skillId -> current level
+  const levelMap = new Map<string, number>();
+  for (const s of allSkillStates) {
+    levelMap.set(s.skillId, s.level);
+  }
+
+  // Map of skillId -> list of prerequisite skillIds
+  const prereqMap = new Map<string, string[]>();
+  for (const prereq of prerequisites) {
+    const list = prereqMap.get(prereq.skillId) || [];
+    list.push(prereq.prerequisiteSkillId);
+    prereqMap.set(prereq.skillId, list);
+  }
+
+  return allSkillStates.map((skill) => {
+    // Only locked and available are subject to prerequisite recalculation
+    if (skill.status !== 'locked' && skill.status !== 'available') {
+      return skill;
+    }
+
+    const prereqIds = prereqMap.get(skill.skillId) || [];
+    const hasUnmetPrereq = prereqIds.some((prereqId) => {
+      const prereqLevel = levelMap.get(prereqId) ?? 0;
+      return prereqLevel < prereqMinLevel;
+    });
+
+    const newStatus: SkillStatus = hasUnmetPrereq ? 'locked' : 'available';
+
+    if (newStatus === skill.status) {
+      return skill;
+    }
+
+    return {
+      ...skill,
+      status: newStatus,
+    };
+  });
+}
+
+export interface SkillStateSnapshot {
+  skillId: string;
+  level: number;
+  status: SkillStatus;
+}
+
+/**
+ * Determines whether journey replanning is required after a state update.
+ * SPEC-004 §3.3:
+ * Returns true if:
+ * - any skill level changed
+ * - any skill status changed (including unlocking or struggling)
+ *
+ * A passed verification where the level and status remain unchanged returns false.
+ */
+export function needsReplan(
+  beforeStates: SkillStateSnapshot[],
+  afterStates: SkillStateSnapshot[]
+): boolean {
+  const beforeMap = new Map<string, SkillStateSnapshot>();
+  for (const b of beforeStates) {
+    beforeMap.set(b.skillId, b);
+  }
+
+  for (const after of afterStates) {
+    const before = beforeMap.get(after.skillId);
+    if (!before) {
+      return true; // New skill introduced
+    }
+    if (before.level !== after.level) {
+      return true;
+    }
+    if (before.status !== after.status) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
