@@ -1,6 +1,9 @@
 {
   "name": "edupath",
   "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev"
+  },
   "dependencies": {
     "@google/genai": "^2.23.0",
     "@supabase/supabase-js": "^2.116.0",
