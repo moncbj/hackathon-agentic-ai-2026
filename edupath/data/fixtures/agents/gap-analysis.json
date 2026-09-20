@@ -1,0 +1,30 @@
+{
+  "summary": "You have a promising foundation for the Junior Data Analyst role, especially in spreadsheets. However, to reach the target profile it is crucial to strengthen SQL and Python, which are essential pillars for data analysis and cleaning.",
+  "perSkill": [
+    {
+      "skillSlug": "sql",
+      "explanation": "You are at level 1 and the role requires level 3. You need to master complex queries, aggregations, and joins.",
+      "whyItMatters": "SQL is the primary data extraction tool and is a prerequisite for relational modeling."
+    },
+    {
+      "skillSlug": "basic-python",
+      "explanation": "You are at level 1 versus the required level 2. You should solidify data structures and functions.",
+      "whyItMatters": "Python is the necessary base before learning advanced manipulation with Pandas."
+    },
+    {
+      "skillSlug": "pandas",
+      "explanation": "You have not started Pandas yet (level 0 of 2). It is essential for exploratory analysis.",
+      "whyItMatters": "It allows you to process datasets and prepare data for visualization and cleaning."
+    },
+    {
+      "skillSlug": "data-cleaning",
+      "explanation": "Level 3 is required to transform raw, messy data into reliable information.",
+      "whyItMatters": "Most of an analyst's time is dedicated to ensuring data quality."
+    }
+  ],
+  "recommendedFocus": [
+    "sql",
+    "basic-python",
+    "data-cleaning"
+  ]
+}

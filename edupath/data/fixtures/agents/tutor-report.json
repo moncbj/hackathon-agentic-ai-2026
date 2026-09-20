@@ -1,0 +1,18 @@
+{
+  "headline": "Progreso sólido en fundamentos analíticos",
+  "narrative": "Has consolidado habilidades clave en hojas de cálculo y demuestras un ritmo constante en tus misiones semanales. Tu comprensión de consultas SQL está madurando rápidamente. El siguiente paso estratégico es cerrar la brecha en Python básico y verificar tus destrezas prácticas mediante una evaluación objetiva.",
+  "nextSteps": [
+    {
+      "candidateId": "continue_week",
+      "text": "Completa tus actividades pendientes de esta semana para afianzar consultas filtradas."
+    },
+    {
+      "candidateId": "assess_sql",
+      "text": "Realiza la evaluación de SQL para verificar tu nivel 2 y actualizar tu progreso."
+    },
+    {
+      "candidateId": "verify_spreadsheets",
+      "text": "Confirma tu dominio en Spreadsheets con una evaluación de verificación."
+    }
+  ]
+}

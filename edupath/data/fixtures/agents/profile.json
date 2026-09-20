@@ -1,0 +1,42 @@
+{
+  "proposedSkills": [
+    {
+      "skillSlug": "basic-python",
+      "proposedLevel": 2,
+      "rationale": "Mentions 2 years of experience with Python and automation scripts",
+      "confidence": "medium"
+    },
+    {
+      "skillSlug": "sql",
+      "proposedLevel": 1,
+      "rationale": "Mentions basic queries in a university database",
+      "confidence": "low"
+    },
+    {
+      "skillSlug": "spreadsheets",
+      "proposedLevel": 3,
+      "rationale": "Describes advanced Excel usage with pivot tables and VLOOKUP",
+      "confidence": "high"
+    },
+    {
+      "skillSlug": "descriptive-statistics",
+      "proposedLevel": 1,
+      "rationale": "Familiar with mean and median concepts from statistics coursework",
+      "confidence": "low"
+    },
+    {
+      "skillSlug": "data-visualization",
+      "proposedLevel": 1,
+      "rationale": "Created basic charts in Excel for academic reports",
+      "confidence": "low"
+    }
+  ],
+  "unmappedSkills": [
+    {
+      "name": "Docker",
+      "proposedLevel": 1,
+      "rationale": "Mentions basic container usage for a project"
+    }
+  ],
+  "summary": "The profile demonstrates solid experience in spreadsheets and foundational programming skills in Python. Verifying the SQL level with an assessment is recommended."
+}
