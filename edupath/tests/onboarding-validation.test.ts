@@ -14,7 +14,7 @@ function makeValues(overrides: Partial<OnboardingFormValues> = {}): OnboardingFo
     return {
         ...INITIAL_VALUES,
         name: 'Alex',
-        targetRoleSlug: 'data-analyst-junior',
+        targetRoleId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         weeklyHours: '8',
         ...overrides,
     };
@@ -36,8 +36,8 @@ describe('validateGoalStep', () => {
     });
 
     it('requires name, role and hours', () => {
-        const errors = validateGoalStep(makeValues({ name: '   ', targetRoleSlug: '', weeklyHours: '' }));
-        expect(Object.keys(errors).sort()).toEqual(['name', 'targetRoleSlug', 'weeklyHours']);
+        const errors = validateGoalStep(makeValues({ name: '   ', targetRoleId: '', weeklyHours: '' }));
+        expect(Object.keys(errors).sort()).toEqual(['name', 'targetRoleId', 'weeklyHours']);
     });
 
     it('enforces the hours range 1 to 40 with whole numbers', () => {
@@ -61,8 +61,8 @@ describe('validateSkillsStep', () => {
     });
 
     it('flags an out-of-range declared level', () => {
-        const values = makeValues({ skillLevels: { sql: 7 as never } });
-        expect(validateSkillsStep(values).skillLevels).toBeDefined();
+        const values = makeValues({ declaredLevels: { sql: 7 as never } });
+        expect(validateSkillsStep(values).declaredLevels).toBeDefined();
     });
 
     it('flags extra skills without a name, with a long name or with a bad level', () => {
@@ -118,7 +118,7 @@ describe('buildOnboardingRequest', () => {
             name: '  Alex  ',
             background: '  Studied statistics  ',
             weeklyHours: '10',
-            skillLevels: { sql: 3 },
+            declaredLevels: { sql: 3 },
             extraSkills: [{ name: '  Tableau ', level: 2 }],
             tutorStyle: { ...INITIAL_VALUES.tutorStyle, freeInstructions: '  use cooking examples ' },
         });
@@ -128,13 +128,13 @@ describe('buildOnboardingRequest', () => {
         expect(request.name).toBe('Alex');
         expect(request.background).toBe('Studied statistics');
         expect(request.weeklyHours).toBe(10);
-        expect(request.skillLevels).toEqual({ sql: 3, pandas: 0 });
+        expect(request.declaredLevels).toEqual({ sql: 3, pandas: 0 });
         expect(request.extraSkills).toEqual([{ name: 'Tableau', level: 2 }]);
         expect(request.tutorStyle.freeInstructions).toBe('use cooking examples');
     });
 
     it('drops levels for skills that do not belong to the chosen role', () => {
-        const values = makeValues({ skillLevels: { sql: 3, 'old-skill': 4 } });
-        expect(buildOnboardingRequest(values, ['sql']).skillLevels).toEqual({ sql: 3 });
+        const values = makeValues({ declaredLevels: { sql: 3, 'old-skill': 4 } });
+        expect(buildOnboardingRequest(values, ['sql']).declaredLevels).toEqual({ sql: 3 });
     });
 });
