@@ -59,7 +59,7 @@
 
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-[#f8f9fd] text-slate-900;
 }
 
 @keyframes node-pop {

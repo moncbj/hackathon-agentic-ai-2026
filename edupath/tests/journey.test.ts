@@ -7,9 +7,9 @@ describe('SPEC-003 journey frontend', () => {
   it('renders the local journey fixture with objectives and activity actions', () => {
     const html = renderToStaticMarkup(createElement(JourneyPage, { initialJourneyData: journeyFixture }));
 
-    expect(html).toContain('Your next missions');
-    expect(html).toContain('SQL');
-    expect(html).toContain('Done');
-    expect(html).toContain('Skip');
+    expect(html).toContain('Biology foundations');
+    expect(html).toContain('Cell Membranes');
+    expect(html).toContain('Up next for you!');
+    expect(html).toContain('Course Challenge');
   });
 });
