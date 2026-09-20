@@ -48,6 +48,24 @@ export interface GradeAssessmentData {
   };
 }
 
+export interface SubmitAssessmentTransactionInput extends GradeAssessmentData {
+  assessmentId: string; learnerId: string; skillId: string;
+  skillState: { level: number; verification: string; status: string; progress: number; consecutiveFailures: number };
+  statusUpdates: Array<{ skillId: string; status: string }>;
+}
+
+/** Executes every persisted effect of assessment submission in one database transaction. */
+export async function submitAssessmentTransaction(input: SubmitAssessmentTransactionInput): Promise<void> {
+  const { error } = await getDbClient().rpc('submit_assessment_transaction', {
+    p_assessment_id: input.assessmentId, p_learner_id: input.learnerId, p_skill_id: input.skillId,
+    p_level: input.skillState.level, p_verification: input.skillState.verification, p_status: input.skillState.status,
+    p_progress: input.skillState.progress, p_consecutive_failures: input.skillState.consecutiveFailures,
+    p_status_updates: input.statusUpdates, p_answers: input.answers, p_score: input.score,
+    p_measured_level: input.measuredLevel, p_passed: input.passed, p_feedback: input.feedback,
+  });
+  if (error) throw new Error(`Failed to submit assessment transaction: ${error.message}`);
+}
+
 /**
  * Creates a new assessment in 'generated' status.
  */

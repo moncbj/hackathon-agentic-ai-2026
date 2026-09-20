@@ -231,8 +231,7 @@ describe('services/assessment', () => {
       new Error('Gemini API timeout')
     );
 
-    const updateSkillSpy = vi.spyOn(learnerSkillsRepo, 'updateLearnerSkillFull');
-    const gradeAssessmentSpy = vi.spyOn(assessmentsRepo, 'gradeAssessment');
+    const transactionSpy = vi.spyOn(assessmentsRepo, 'submitAssessmentTransaction');
 
     await expect(
       submitAssessment('assessment-001', {
@@ -247,8 +246,7 @@ describe('services/assessment', () => {
     );
 
     // Invariant: Zero DB mutations occurred
-    expect(updateSkillSpy).not.toHaveBeenCalled();
-    expect(gradeAssessmentSpy).not.toHaveBeenCalled();
+    expect(transactionSpy).not.toHaveBeenCalled();
   });
 
   it('successfully submits and grades, dropping measured level on incorrect answers and recommending replan', async () => {
@@ -262,16 +260,7 @@ describe('services/assessment', () => {
       strugglesWith: ['XLOOKUP', 'SUMIFS'],
     });
 
-    const updateSkillSpy = vi.spyOn(learnerSkillsRepo, 'updateLearnerSkillFull').mockResolvedValue({
-      ...mockLearnerSkill,
-      level: 2,
-      verification: 'verified',
-    });
-    const gradeAssessmentSpy = vi.spyOn(assessmentsRepo, 'gradeAssessment').mockResolvedValue({
-      ...mockGeneratedAssessment,
-      status: 'graded',
-      score: 0.4,
-    });
+    const transactionSpy = vi.spyOn(assessmentsRepo, 'submitAssessmentTransaction').mockResolvedValue();
 
     // Answers: 1 correct MCQ (q1: 1b), 2 incorrect (q2: wrong, q3: wrong)
     // MCQ points = 1.0, Short answer points = 0.5 + 0.5 = 1.0
@@ -294,16 +283,13 @@ describe('services/assessment', () => {
     expect(result.replanRecommended).toBe(true);
 
     // DB updates were persisted
-    expect(updateSkillSpy).toHaveBeenCalledWith(
-      mockLearnerId,
-      mockSkillId,
-      expect.objectContaining({
+    expect(transactionSpy).toHaveBeenCalledWith(expect.objectContaining({
+      skillState: expect.objectContaining({
         level: 2,
         verification: 'verified',
         status: 'available',
         consecutiveFailures: 1,
-      })
-    );
-    expect(gradeAssessmentSpy).toHaveBeenCalled();
+      }),
+    }));
   });
 });

@@ -6,8 +6,6 @@ import { getSkillsByRole, getSkillBySlug } from '@/lib/db/repositories/skills';
 import {
   getLearnerSkills,
   getLearnerSkill,
-  updateLearnerSkillFull,
-  bulkUpdateLearnerSkillStatuses,
 } from '@/lib/db/repositories/learner-skills';
 import { getPrerequisitesByRole } from '@/lib/db/repositories/prerequisites';
 import { getTutorStyle } from '@/lib/db/repositories/tutor-styles';
@@ -16,7 +14,7 @@ import {
   getAssessmentById,
   getGeneratedAssessmentForSkill,
   getPastPromptsForSkill,
-  gradeAssessment,
+  submitAssessmentTransaction,
   AssessmentRecord,
 } from '@/lib/db/repositories/assessments';
 import {
@@ -366,22 +364,10 @@ export async function submitAssessment(
 
   const replanRecommended = needsReplan(beforeStates, recomputedStates);
 
-  // Persist skill state update
-  await updateLearnerSkillFull(learner.id, assessment.skill_id, {
-    level: appliedResult.level,
-    verification: appliedResult.verification,
-    status: appliedResult.status,
-    progress: appliedResult.progress,
-    consecutiveFailures: appliedResult.consecutiveFailures,
-  });
-
-  // Persist any unlocked/status-changed dependents
-  if (statusChanges.length > 0) {
-    await bulkUpdateLearnerSkillStatuses(learner.id, statusChanges);
-  }
-
-  // Persist graded assessment record
-  await gradeAssessment(assessment.id, {
+  await submitAssessmentTransaction({
+    assessmentId: assessment.id, learnerId: learner.id, skillId: assessment.skill_id,
+    skillState: { level: appliedResult.level, verification: appliedResult.verification, status: appliedResult.status, progress: appliedResult.progress, consecutiveFailures: appliedResult.consecutiveFailures },
+    statusUpdates: statusChanges,
     answers,
     score: finalScore,
     measuredLevel: appliedResult.measuredLevel,
