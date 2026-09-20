@@ -1,17 +1,6 @@
-import { HealthStatus } from "@/components/health/health-status";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <section className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-          Welcome to EduPath
-        </h2>
-        <p className="mt-1 text-slate-600">
-          Your personalized learning path, verified as you go.
-        </p>
-      </div>
-      <HealthStatus />
-    </section>
-  );
+  // TODO: Conectar con GET /api/learner cuando el endpoint esté listo
+  redirect("/onboarding");
 }
