@@ -47,11 +47,21 @@ interface JourneyWeek {
   activities: JourneyActivity[];
 }
 
+interface JourneyChangeItem {
+  type: string;
+  skillSlug: string;
+  detail: string;
+}
+
 interface JourneySummary {
   journey: {
     id: string;
     version: number;
     summary: string;
+    changes?: {
+      items?: JourneyChangeItem[];
+      explanation?: string;
+    } | null;
   };
   weeks: JourneyWeek[];
   stats: {
@@ -215,6 +225,39 @@ export default function DashboardPage() {
 
   return (
     <section className="space-y-6">
+      {/* Plan Changes Panel (SPEC-004) */}
+      {journey?.journey?.changes?.items && journey.journey.changes.items.length > 0 && (
+        <section className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50/80 to-purple-50/80 p-6 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-indigo-100 border border-indigo-300 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-800">
+                Journey v{journey.journey.version}
+              </span>
+              <span className="text-xs font-bold text-indigo-700">Cambios recientes en tu plan</span>
+            </div>
+          </div>
+          <h3 className="mt-2 text-xl font-black text-slate-900">Adaptación inteligente del plan</h3>
+          {journey.journey.changes.explanation && (
+            <p className="mt-1 text-sm text-slate-700 leading-relaxed max-w-3xl">
+              {journey.journey.changes.explanation}
+            </p>
+          )}
+          <div className="mt-4 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            {journey.journey.changes.items.map((change, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-2.5 p-3 rounded-xl bg-white border border-indigo-100 text-xs shadow-xs"
+              >
+                <span className="font-bold uppercase text-[10px] px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0 mt-0.5">
+                  {change.type.replace(/_/g, " ")}
+                </span>
+                <span className="text-slate-800 leading-snug">{change.detail}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* 1. "This week" or "Create plan" widget (SPEC-003) */}
       {journey && currentWeek ? (
         <section className="rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-900 to-teal-800 p-6 text-white shadow-lg">
@@ -222,7 +265,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-emerald-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-100">
-                  This Week · Week {currentWeek.number}
+                  This Week · Week {currentWeek.number} (v{journey.journey.version})
                 </span>
                 <span className="text-xs text-emerald-200">
                   {currentWeekCompleted} of {currentWeek.activities.length} completed
@@ -349,18 +392,29 @@ export default function DashboardPage() {
                     <button
                       key={node.id}
                       onClick={() => setSelected(node)}
-                      className={`w-full rounded-xl border-2 p-3 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-md ${
+                      className={`w-full rounded-xl border-2 p-3 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
                         statusStyle[node.status]
                       } ${node.verification === "self_reported" ? "border-dashed" : ""}`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <span className="font-bold">{node.name}</span>
-                        <span className="text-xs">
-                          {node.verification === "verified" ? "✓" : "○"}
+                        <span
+                          className={`text-xs font-bold px-1.5 py-0.2 rounded ${
+                            node.verification === "verified"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "text-slate-400"
+                          }`}
+                        >
+                          {node.verification === "verified" ? "✓ Verified" : "○ Self"}
                         </span>
                       </div>
                       <p className="mt-2 text-xs">
                         Level {node.level}/{node.requiredLevel} · {node.status.replace("_", " ")}
+                        {node.status === "struggling" && (
+                          <span className="block text-rose-700 font-bold text-[11px] mt-0.5">
+                            ⚠️ Prioridad de refuerzo
+                          </span>
+                        )}
                         {node.progress !== undefined && node.progress > 0 && (
                           <span className="block text-emerald-800 font-semibold mt-0.5">
                             {node.progress}% progress
@@ -390,12 +444,21 @@ export default function DashboardPage() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <h3 className="font-bold">Unverified</h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <h3 className="font-bold">Unverified skills</h3>
+            <ul className="mt-3 space-y-2.5 text-sm">
               {gaps.unverified.length ? (
                 gaps.unverified.map((item) => (
-                  <li key={item.skillSlug}>
-                    {item.name} <span className="text-slate-500">(level {item.level})</span>
+                  <li key={item.skillSlug} className="flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-medium">{item.name}</span>{" "}
+                      <span className="text-slate-400 text-xs">(Lvl {item.level})</span>
+                    </div>
+                    <Link
+                      href={`/assessment/${item.skillSlug}`}
+                      className="text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg border border-indigo-200 transition"
+                    >
+                      Evaluate
+                    </Link>
                   </li>
                 ))
               ) : (
@@ -411,11 +474,22 @@ export default function DashboardPage() {
         <section className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-bold text-emerald-700">Skill detail</p>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-bold text-emerald-700">Skill detail</span>
+                {selected.verification === "verified" ? (
+                  <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    ✓ Verified
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                    Self-reported
+                  </span>
+                )}
+              </div>
               <h3 className="text-2xl font-black">{selected.name}</h3>
               <p className="mt-1 text-slate-600">
                 Level {selected.level} of {selected.requiredLevel} · Gap {selected.gap} ·{" "}
-                {selected.verification.replace("_", " ")}
+                <span className="capitalize">{selected.status.replace("_", " ")}</span>
                 {selected.progress !== undefined && (
                   <span className="ml-2 font-semibold text-emerald-800">
                     · {selected.progress}% progress
@@ -424,16 +498,26 @@ export default function DashboardPage() {
               </p>
             </div>
             {selected.progress !== undefined && selected.progress >= 100 ? (
-              <span className="rounded-lg bg-emerald-100 border border-emerald-300 px-4 py-2 font-bold text-emerald-800">
-                Ready for assessment
-              </span>
+              <Link
+                href={`/assessment/${selected.slug}`}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2 font-bold text-white shadow-sm transition inline-flex items-center gap-1.5"
+              >
+                Ready for assessment →
+              </Link>
+            ) : selected.verification === "self_reported" && selected.level >= 1 ? (
+              <Link
+                href={`/assessment/${selected.slug}`}
+                className="rounded-xl bg-indigo-600 hover:bg-indigo-700 px-4 py-2 font-bold text-white shadow-sm transition inline-flex items-center gap-1.5"
+              >
+                Evaluate skill →
+              </Link>
             ) : (
               <button
                 disabled
-                title="Assessments arrive in SPEC-004"
-                className="cursor-not-allowed rounded-lg bg-slate-200 px-4 py-2 font-bold text-slate-500"
+                title="Skill must have self-reported level >= 1 or progress >= 100% to evaluate"
+                className="cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-400 border border-slate-200"
               >
-                Assess (coming soon)
+                Ineligible to assess
               </button>
             )}
           </div>

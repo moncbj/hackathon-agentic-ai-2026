@@ -4,6 +4,7 @@
 import {
   JOURNEY_HORIZON_WEEKS,
   MINUTES_PER_LEVEL,
+  SKIPPED_REPLAN_THRESHOLD,
   STRUGGLE_BOOST,
   WIP_LIMIT,
   ActivityType,
@@ -576,3 +577,149 @@ export function buildJourneySkeleton(params: BuildJourneySkeletonParams): Journe
     studyOrder: scheduledOrder,
   };
 }
+
+/**
+ * Checks whether the count of skipped activities triggers an automatic replan.
+ * SPEC-004 §3.4: omitted activities in current Journey >= SKIPPED_REPLAN_THRESHOLD (2)
+ */
+export function shouldReplanForSkippedActivities(
+  skippedCount: number,
+  threshold: number = SKIPPED_REPLAN_THRESHOLD
+): boolean {
+  return skippedCount >= threshold;
+}
+
+export type JourneyChangeType =
+  | 'skill_added'
+  | 'skill_removed'
+  | 'skill_unlocked'
+  | 'reinforcement_added'
+  | 'resource_swapped'
+  | 'time_reallocated';
+
+export interface JourneyChange {
+  type: JourneyChangeType;
+  skillSlug: string;
+  detail: string;
+}
+
+export interface ComputeJourneyChangesOptions {
+  unlockedSkillSlugs?: string[];
+}
+
+/**
+ * Deterministically computes the structured difference between two journey skeletons.
+ * SPEC-004 §3.4:
+ * Types: skill_added, skill_removed, skill_unlocked, reinforcement_added, resource_swapped, time_reallocated
+ * Output is stably sorted by skillSlug ASC then type ASC.
+ */
+export function computeJourneyChanges(
+  oldSkeleton: JourneySkeleton,
+  newSkeleton: JourneySkeleton,
+  options?: ComputeJourneyChangesOptions
+): JourneyChange[] {
+  const changes: JourneyChange[] = [];
+
+  const oldSkillsMap = new Map<string, ScheduledSkillSummary>();
+  for (const s of oldSkeleton.scheduledSkills) {
+    oldSkillsMap.set(s.skillSlug, s);
+  }
+
+  const newSkillsMap = new Map<string, ScheduledSkillSummary>();
+  for (const s of newSkeleton.scheduledSkills) {
+    newSkillsMap.set(s.skillSlug, s);
+  }
+
+  // 1. Check unlocked skills
+  if (options?.unlockedSkillSlugs) {
+    for (const slug of options.unlockedSkillSlugs) {
+      changes.push({
+        type: 'skill_unlocked',
+        skillSlug: slug,
+        detail: `Prerequisites met: ${slug} is now unlocked and available for learning`,
+      });
+    }
+  }
+
+  const unlockedSet = new Set(options?.unlockedSkillSlugs || []);
+
+  // 2. Skill added (in new, not in old)
+  for (const [slug, newSkill] of newSkillsMap.entries()) {
+    if (!oldSkillsMap.has(slug)) {
+      if (!unlockedSet.has(slug)) {
+        changes.push({
+          type: 'skill_added',
+          skillSlug: slug,
+          detail: `Added ${newSkill.name} to the active learning journey (${newSkill.totalScheduledMinutes} min)`,
+        });
+      }
+    }
+  }
+
+  // 3. Skill removed (in old, not in new)
+  for (const [slug, oldSkill] of oldSkillsMap.entries()) {
+    if (!newSkillsMap.has(slug)) {
+      changes.push({
+        type: 'skill_removed',
+        skillSlug: slug,
+        detail: `Removed ${oldSkill.name} from active schedule (requirement met or reprioritized)`,
+      });
+    }
+  }
+
+  // 4. Skills in both plans
+  for (const [slug, newSkill] of newSkillsMap.entries()) {
+    const oldSkill = oldSkillsMap.get(slug);
+    if (!oldSkill) continue;
+
+    // Check reinforcement_added
+    if (newSkill.reinforcement && !oldSkill.reinforcement) {
+      changes.push({
+        type: 'reinforcement_added',
+        skillSlug: slug,
+        detail: `Added reinforcement focus for ${newSkill.name} due to assessment difficulty`,
+      });
+      continue;
+    }
+
+    // Check resource_swapped
+    const oldResources = oldSkill.slots
+      .filter((s) => s.resource?.id)
+      .map((s) => s.resource!.id)
+      .sort();
+    const newResources = newSkill.slots
+      .filter((s) => s.resource?.id)
+      .map((s) => s.resource!.id)
+      .sort();
+
+    const resourcesChanged =
+      oldResources.length > 0 &&
+      newResources.length > 0 &&
+      JSON.stringify(oldResources) !== JSON.stringify(newResources);
+
+    if (resourcesChanged) {
+      changes.push({
+        type: 'resource_swapped',
+        skillSlug: slug,
+        detail: `Updated learning resources for ${newSkill.name} to better match target competency`,
+      });
+    } else if (newSkill.totalScheduledMinutes !== oldSkill.totalScheduledMinutes) {
+      // Check time_reallocated
+      const diff = newSkill.totalScheduledMinutes - oldSkill.totalScheduledMinutes;
+      const sign = diff > 0 ? `+${diff}` : `${diff}`;
+      changes.push({
+        type: 'time_reallocated',
+        skillSlug: slug,
+        detail: `Reallocated weekly time for ${newSkill.name} (${sign} min, total ${newSkill.totalScheduledMinutes} min)`,
+      });
+    }
+  }
+
+  // Stable sort by skillSlug ASC, then type ASC
+  return changes.sort((a, b) => {
+    const cmp = a.skillSlug.localeCompare(b.skillSlug);
+    if (cmp !== 0) return cmp;
+    return a.type.localeCompare(b.type);
+  });
+}
+

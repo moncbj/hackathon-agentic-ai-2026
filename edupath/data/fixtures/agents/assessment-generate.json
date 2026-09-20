@@ -1,0 +1,117 @@
+{
+  "questions": [
+    {
+      "id": "q1-mcq",
+      "type": "multiple_choice",
+      "prompt": "¿Cuál es la principal ventaja técnica de utilizar XLOOKUP en comparación con VLOOKUP tradicional?",
+      "options": [
+        {
+          "id": "opt-1a",
+          "text": "Exige que la columna de búsqueda esté siempre a la izquierda del valor retornado."
+        },
+        {
+          "id": "opt-1b",
+          "text": "Realiza búsquedas exactas por defecto y permite buscar hacia la izquierda sin reordenar columnas."
+        },
+        {
+          "id": "opt-1c",
+          "text": "Solo funciona cuando los datos están ordenados numéricamente de forma ascendente."
+        },
+        {
+          "id": "opt-1d",
+          "text": "Está limitada a un máximo de 256 filas en hojas de cálculo modernas."
+        }
+      ],
+      "correctOptionId": "opt-1b",
+      "explanation": "XLOOKUP resuelve las limitaciones de VLOOKUP al permitir búsquedas hacia la izquierda, usar coincidencia exacta por defecto y no requerir conteo manual de índices de columna."
+    },
+    {
+      "id": "q2-mcq",
+      "type": "multiple_choice",
+      "prompt": "En una tabla dinámica, ¿cuál es el procedimiento estándar para mostrar el porcentaje que representa cada categoría respecto al total general?",
+      "options": [
+        {
+          "id": "opt-2a",
+          "text": "Aplicar una regla de formato condicional con escala de 3 colores."
+        },
+        {
+          "id": "opt-2b",
+          "text": "Crear un filtro avanzado extrayendo solo registros únicos."
+        },
+        {
+          "id": "opt-2c",
+          "text": "Ir a Configuración de campo de valor -> Mostrar valores como -> % del total general."
+        },
+        {
+          "id": "opt-2d",
+          "text": "Concatenar los valores con el símbolo de porcentaje mediante una macro."
+        }
+      ],
+      "correctOptionId": "opt-2c",
+      "explanation": "La opción 'Mostrar valores como' dentro de la configuración del campo de valor calcula automáticamente proporciones relativas como el % del total general sin alterar los datos fuente."
+    },
+    {
+      "id": "q3-mcq",
+      "type": "multiple_choice",
+      "prompt": "¿Qué combinación de funciones ofrece la alternativa bidireccional más robusta a VLOOKUP en hojas de cálculo?",
+      "options": [
+        {
+          "id": "opt-3a",
+          "text": "INDEX y MATCH"
+        },
+        {
+          "id": "opt-3b",
+          "text": "CONCATENATE y LEN"
+        },
+        {
+          "id": "opt-3c",
+          "text": "SUMIF y COUNTIF"
+        },
+        {
+          "id": "opt-3d",
+          "text": "LEFT y RIGHT"
+        }
+      ],
+      "correctOptionId": "opt-3a",
+      "explanation": "La combinación de INDEX y MATCH desacopla la posición de búsqueda de la columna de extracción, permitiendo búsquedas dinámicas en cualquier dirección."
+    },
+    {
+      "id": "q4-sa",
+      "type": "short_answer",
+      "prompt": "Explica cómo estructurarías una fórmula con SUMIFS para sumar ventas por producto, región y rango de fechas, y cómo gestionarías posibles errores o celdas vacías.",
+      "rubric": {
+        "criteria": [
+          {
+            "description": "Especifica correctamente el rango de suma inicial y los pares ordenados de rango y condición para producto, región y fecha.",
+            "points": 1.0
+          },
+          {
+            "description": "Describe la prevención de errores o valores atípicos mediante IFERROR o validación de rangos.",
+            "points": 1.0
+          }
+        ],
+        "maxPoints": 2.0
+      },
+      "explanation": "La respuesta debe indicar el rango de suma como primer argumento de SUMIFS, los pares de criterios para producto, región y límites de fecha (>= y <=), y el uso de IFERROR para controlar resultados vacíos o no numéricos."
+    },
+    {
+      "id": "q5-sa",
+      "type": "short_answer",
+      "prompt": "Define la diferencia entre una referencia absoluta ($A$1) y una referencia mixta ($A1 o A$1), ilustrando un caso práctico donde la referencia mixta sea esencial.",
+      "rubric": {
+        "criteria": [
+          {
+            "description": "Explica con claridad el efecto de fijar exclusivamente la fila o la columna al desplazar o autorellenar una fórmula.",
+            "points": 1.0
+          },
+          {
+            "description": "Proporciona un ejemplo concreto como una tabla de doble entrada donde se combinan encabezados de fila y columna.",
+            "points": 1.0
+          }
+        ],
+        "maxPoints": 2.0
+      },
+      "explanation": "La referencia mixta fija solo un eje (fila o columna). Un caso clásico es una tabla de amortización o matriz de multiplicación ($A2 * B$1) donde se arrastra la fórmula en dos dimensiones simultáneamente."
+    }
+  ]
+}
