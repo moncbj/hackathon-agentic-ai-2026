@@ -107,7 +107,12 @@ describe('fetchHealth with mocks', () => {
   it('returns the default ok mock', async () => {
     const result = await runMock();
     expect(result.error).toBeNull();
-    expect(result.data).toEqual({ db: 'ok', ai: 'fixtures', seededRoles: 1 });
+    expect(result.data).toEqual({
+      db: 'ok',
+      ai: 'fixtures',
+      seededRoles: 1,
+      seededRoleNames: ['Data Analyst (junior)'],
+    });
   });
 
   it('returns zero seeded roles for mock=empty', async () => {
