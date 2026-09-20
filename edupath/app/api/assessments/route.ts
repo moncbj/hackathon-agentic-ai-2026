@@ -1,10 +1,42 @@
+// app/api/assessments/route.ts
+// HTTP route handler for POST /api/assessments (SPEC-004 §3.5)
+
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { getActiveLearner } from '@/lib/db/repositories/learners';
-import { getLearnerSkills } from '@/lib/db/repositories/learner-skills';
-import { getSkillsByRole } from '@/lib/db/repositories/skills';
-import { getGeneratedAssessment, createAssessment } from '@/lib/db/repositories/assessments';
-import { runAssessmentGenerate } from '@/agents/assessment/run';
-const Body=z.object({skillId:z.string().uuid()}); export const dynamic='force-dynamic';
-const publicQuestions=(q:unknown[])=>q.map(({correctOptionId,rubric,explanation,...rest}:any)=>rest);
-export async function POST(req:NextRequest){try{const p=Body.safeParse(await req.json());if(!p.success)return NextResponse.json({error:'Validation failed'},{status:400});const learner=await getActiveLearner();if(!learner||!learner.target_role_id)return NextResponse.json({error:'No learner'},{status:404});const [states,skills]=await Promise.all([getLearnerSkills(learner.id),getSkillsByRole(learner.target_role_id)]);const state=states.find(s=>s.skill_id===p.data.skillId),skill=skills.find(s=>s.id===p.data.skillId);if(!state||!skill)return NextResponse.json({error:'Skill not found'},{status:404});const kind=state.progress>=100?'progress':state.verification==='self_reported'&&state.level>=1?'verification':null;if(!kind)return NextResponse.json({error:'Skill is not eligible for assessment'},{status:409});const prior=await getGeneratedAssessment(learner.id,skill.id);if(prior)return NextResponse.json({id:prior.id,kind:prior.kind,questions:publicQuestions(prior.questions)},{status:200});const generated=await runAssessmentGenerate({skill:{slug:skill.slug,name:skill.name,description:skill.description},targetLevel:kind==='progress'?skill.required_level:state.level,levelDescription:'',language:'es',mix:{multipleChoice:3,shortAnswer:2},previousPrompts:[]});const saved=await createAssessment({learner_id:learner.id,skill_id:skill.id,kind,target_level:kind==='progress'?skill.required_level:state.level,questions:generated.questions});return NextResponse.json({id:saved.id,kind,questions:publicQuestions(saved.questions)},{status:201});}catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Assessment generation failed'},{status:502});}}
+import { generateAssessment, AssessmentServiceError } from '@/services/assessment';
+
+export const dynamic = 'force-dynamic';
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const skillSlug = body?.skillSlug;
+
+    if (!skillSlug || typeof skillSlug !== 'string') {
+      return NextResponse.json(
+        { error: 'Missing or invalid "skillSlug" field in request body' },
+        { status: 400 }
+      );
+    }
+
+    const result = await generateAssessment(skillSlug.trim());
+    return NextResponse.json(result, { status: 201 });
+  } catch (err: unknown) {
+    if (err instanceof AssessmentServiceError) {
+      return NextResponse.json(
+        {
+          error: err.message,
+          code: err.code,
+        },
+        { status: err.status }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        error: 'Failed to generate assessment',
+        details: err instanceof Error ? err.message : String(err),
+      },
+      { status: 500 }
+    );
+  }
+}

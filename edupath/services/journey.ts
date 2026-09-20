@@ -154,7 +154,7 @@ export interface SkipActivityResponse {
  * - SkillSlugs must exist in scheduled skills
  * - Text constraints are checked
  */
-function validatePlannerAgentOutput(
+export function validatePlannerAgentOutput(
   output: PlannerAgentOutput,
   skeleton: JourneySkeleton
 ): boolean {
@@ -202,15 +202,15 @@ function validatePlannerAgentOutput(
  * is unavailable, times out, or produces invalid output.
  * Preserves exact deterministic decisions, skill, week, minutes, and resources.
  */
-function buildDeterministicMinimumFallback(
+export function buildDeterministicMinimumFallback(
   skeleton: JourneySkeleton
 ): PlannerAgentOutput {
   const objectives = skeleton.scheduledSkills.map((s) => ({
     skillSlug: s.skillSlug,
-    description: `Dominar la habilidad de ${s.name} para alcanzar el nivel objetivo ${s.targetLevel}.`.slice(0, 250),
+    description: `Master the ${s.name} skill to reach target level ${s.targetLevel}.`.slice(0, 250),
     masteryCriteria: [
-      `Completar las actividades programadas de ${s.name}`,
-      `Demostrar comprensión práctica de los conceptos clave`,
+      `Complete scheduled activities for ${s.name}`,
+      `Demonstrate practical understanding of key concepts`,
     ],
   }));
 
@@ -218,12 +218,12 @@ function buildDeterministicMinimumFallback(
     w.slots.map((slot) => {
       let title = '';
       if (slot.type === 'resource') {
-        const resTitle = slot.resource?.title ?? 'Conceptos clave';
-        title = `Aprender ${slot.skillSlug}: ${resTitle}`;
+        const resTitle = slot.resource?.title ?? 'Key concepts';
+        title = `Learn ${slot.skillSlug}: ${resTitle}`;
       } else if (slot.type === 'practice') {
-        title = `Práctica guiada de ${slot.skillSlug}`;
+        title = `Guided practice for ${slot.skillSlug}`;
       } else {
-        title = `Proyecto de aplicación de ${slot.skillSlug}`;
+        title = `Application project for ${slot.skillSlug}`;
       }
       if (title.length > 80) {
         title = title.slice(0, 77) + '...';
@@ -232,9 +232,9 @@ function buildDeterministicMinimumFallback(
       return {
         slotId: slot.slotId,
         title,
-        mission: `Completar la actividad de tipo ${slot.type} para la habilidad ${slot.skillSlug}.`,
-        instructions: `Dedicar ${slot.minutes} minutos a trabajar en los conceptos y ejercicios de ${slot.skillSlug}.`,
-        successCriteria: `Finalizar la sesión de trabajo y verificar los conceptos aprendidos.`,
+        mission: `Complete the ${slot.type} activity for the ${slot.skillSlug} skill.`,
+        instructions: `Spend ${slot.minutes} minutes working on concepts and exercises for ${slot.skillSlug}.`,
+        successCriteria: `Complete the work session and review the learned concepts.`,
       };
     })
   );
@@ -243,8 +243,8 @@ function buildDeterministicMinimumFallback(
     const distinctNames = Array.from(new Set(w.slots.map((s) => s.skillSlug)));
     return {
       week: w.weekNumber,
-      headline: `Semana ${w.weekNumber}: Enfoque en ${distinctNames.join(', ')}`.slice(0, 80),
-      note: `Dedicación total estimada: ${w.totalMinutes} minutos en ${w.slots.length} actividades.`,
+      headline: `Week ${w.weekNumber}: Focus on ${distinctNames.join(', ')}`.slice(0, 80),
+      note: `Estimated total dedication: ${w.totalMinutes} minutes across ${w.slots.length} activities.`,
     };
   });
 
@@ -426,9 +426,9 @@ export async function generateInitialJourney(learnerId?: string): Promise<Journe
       skillId: s.skillId,
       description:
         matchedObjective?.description ??
-        `Dominar la habilidad de ${s.name} para alcanzar el nivel ${s.targetLevel}.`,
+        `Master the ${s.name} skill to reach target level ${s.targetLevel}.`,
       masteryCriteria: matchedObjective?.masteryCriteria ?? [
-        `Completar actividades programadas de ${s.name}`,
+        `Complete scheduled activities for ${s.name}`,
       ],
       targetLevel: s.targetLevel,
       status: 'active',
@@ -440,8 +440,8 @@ export async function generateInitialJourney(learnerId?: string): Promise<Journe
 
   // b) Journey
   const journeySummary = agentOutput.weeklySummaries.length > 0
-    ? agentOutput.weeklySummaries.map((ws) => `Semana ${ws.week}: ${ws.headline}`).join('. ')
-    : 'Plan inicial de aprendizaje';
+    ? agentOutput.weeklySummaries.map((ws) => `Week ${ws.week}: ${ws.headline}`).join('. ')
+    : 'Initial learning plan';
 
   const createdJourney = await createJourney({
     learnerId: learner.id,
@@ -468,11 +468,11 @@ export async function generateInitialJourney(learnerId?: string): Promise<Journe
       let title = agentActivity?.title;
       if (!title) {
         if (slot.type === 'resource') {
-          title = `Aprender ${slot.skillSlug}: ${slot.resource?.title ?? 'Conceptos clave'}`;
+          title = `Learn ${slot.skillSlug}: ${slot.resource?.title ?? 'Key concepts'}`;
         } else if (slot.type === 'practice') {
-          title = `Práctica de ${slot.skillSlug}`;
+          title = `Practice: ${slot.skillSlug}`;
         } else {
-          title = `Proyecto de ${slot.skillSlug}`;
+          title = `Project: ${slot.skillSlug}`;
         }
       }
 
@@ -485,13 +485,13 @@ export async function generateInitialJourney(learnerId?: string): Promise<Journe
         title: title.slice(0, 80),
         mission:
           agentActivity?.mission ??
-          `Completar la actividad ${slot.type} para afianzar ${slot.skillSlug}.`,
+          `Complete the ${slot.type} activity to strengthen ${slot.skillSlug}.`,
         instructions:
           agentActivity?.instructions ??
-          `Dedicar ${slot.minutes} minutos a la actividad.`,
+          `Spend ${slot.minutes} minutes on the activity.`,
         successCriteria:
           agentActivity?.successCriteria ??
-          `Completar la sesión y registrar el aprendizaje.`,
+          `Complete the session and record key learnings.`,
         // CRITICAL INVARIANT: Resource ID comes ONLY from deterministic slot, NEVER from agent
         resourceId: slot.resource?.id ?? null,
         estimatedMinutes: slot.minutes,
@@ -609,8 +609,8 @@ export async function getActiveJourneyData(learnerId?: string): Promise<JourneyR
 
     return {
       number: weekNum,
-      headline: summary?.headline ?? `Semana ${weekNum}`,
-      note: summary?.note ?? `Dedicación total: ${weekTotalMinutes} minutos.`,
+      headline: summary?.headline ?? `Week ${weekNum}`,
+      note: summary?.note ?? `Total dedication: ${weekTotalMinutes} minutes.`,
       totalMinutes: weekTotalMinutes,
       activities: weekActs,
     };

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "questionId": "q4-sa",
+      "score": 0.5,
+      "feedback": "Muestra comprensión de la estructura de SUMIFS pero no detalla el filtrado por fecha ni el manejo preventivo de errores con IFERROR."
+    },
+    {
+      "questionId": "q5-sa",
+      "score": 0.5,
+      "feedback": "Distingue referencias absolutas de mixtas pero el ejemplo práctico omite la notación exacta de fijación dimensional requerida."
+    }
+  ],
+  "overallFeedback": "El estudiante demuestra dominio de conceptos intermedios pero presenta vacíos en la construcción de fórmulas complejas y referencias matriciales.",
+  "strugglesWith": [
+    "SUMIFS con rangos de fecha compuestos",
+    "Referencias mixtas en matrices bidireccionales",
+    "Tratamiento de errores con IFERROR"
+  ]
+}
