@@ -67,3 +67,39 @@ export async function getLearnerSkills(learnerId: string): Promise<LearnerSkillR
 
   return data ?? [];
 }
+
+/**
+ * Updates progress and status for a specific learner skill.
+ */
+export async function updateLearnerSkillProgress(
+  learnerId: string,
+  skillId: string,
+  progress: number,
+  status?: SkillStatus
+): Promise<LearnerSkillRecord> {
+  const db = getDbClient();
+  const updatePayload: { progress: number; updated_at: string; status?: SkillStatus } = {
+    progress,
+    updated_at: new Date().toISOString(),
+  };
+  if (status) {
+    updatePayload.status = status;
+  }
+
+  const { data, error } = await db
+    .from('learner_skills')
+    .update(updatePayload)
+    .eq('learner_id', learnerId)
+    .eq('skill_id', skillId)
+    .select()
+    .single();
+
+  if (error || !data) {
+    throw new Error(
+      `Failed to update learner skill progress for learner "${learnerId}", skill "${skillId}": ${error?.message}`
+    );
+  }
+
+  return data;
+}
+

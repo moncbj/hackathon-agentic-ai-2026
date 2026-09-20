@@ -456,4 +456,216 @@ Computes deterministic gap analysis and delivers a contextualized explanation fr
 - **404 Not Found:** `{"error": "Target role \"...\" not found", "code": "ROLE_NOT_FOUND"}`
 - **500 Internal Server Error:** Unexpected database failure.
 
+---
+
+## 5. Learning Journey & Activities (SPEC-003)
+
+### `POST /api/journey/generate`
+
+Constructs the personalized weekly learning journey from the deterministic skill gaps computed in SPEC-002, invokes the Learning Planner Agent (at most 1 AI call) to generate narrative missions, instructions, and objectives, and persists `objectives`, `journeys`, and `activities`.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `POST`
+- **Cache:** `no-store` (force-dynamic)
+- **AI Calls:** Maximum 1 Planner Agent invocation.
+
+#### Architectural Separation of Concerns
+- **Deterministic Engine (`buildJourneySkeleton`):** Determines which skills are scheduled, topological prerequisite study order, week allocation up to 4 weeks (`JOURNEY_HORIZON_WEEKS`), weekly effort budget (`weeklyHours * 60`), WIP limit (maximum 2 distinct skills per week), activity slot types (at least 1 resource slot and 1 practice slot per skill; project slot if gap >= 2), 15-minute slot multiples, and resource selection from the catalog.
+- **Learning Planner Agent:** Only writes natural language: objective descriptions, verifiable mastery criteria, mission narratives, practice/project instructions, success criteria, and weekly summaries. It CANNOT alter study order, weeks, minutes, or invent URLs.
+- **Fallback Rule:** If the Planner Agent times out, fails, or produces invalid output (missing/unknown slots, invalid skill slugs, excessive text lengths), the service automatically applies the **deterministic minimum fallback**, preserving the full deterministic plan without failing the user request.
+
+#### Response (201 Created)
+
+```json
+{
+  "journey": {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "version": 1,
+    "isCurrent": true,
+    "reason": "initial",
+    "summary": "Semana 1: Enfoque en SQL. Semana 2: Enfoque en Spreadsheets.",
+    "changes": {
+      "weeklySummaries": [
+        {
+          "week": 1,
+          "headline": "Enfoque en SQL",
+          "note": "Dedicación estimada: 300 minutos."
+        }
+      ],
+      "isFallback": false
+    },
+    "createdAt": "2026-01-01T00:00:00Z"
+  },
+  "weeks": [
+    {
+      "number": 1,
+      "headline": "Enfoque en SQL",
+      "note": "Dedicación estimada: 300 minutos.",
+      "totalMinutes": 300,
+      "activities": [
+        {
+          "id": "22222222-2222-2222-2222-222222222222",
+          "objectiveId": "33333333-3333-3333-3333-333333333333",
+          "skillId": "skill-sql",
+          "skillSlug": "sql",
+          "skillName": "SQL",
+          "week": 1,
+          "type": "resource",
+          "title": "Aprender SQL: Consultas esenciales",
+          "mission": "Explora los fundamentos de bases de datos relacionales y sintaxis SELECT.",
+          "instructions": "Completa los primeros tres módulos del curso interactivo.",
+          "successCriteria": "Escribir consultas básicas con filtros WHERE.",
+          "minutes": 150,
+          "status": "pending",
+          "completedAt": null,
+          "resource": {
+            "id": "res-sql-1",
+            "title": "SQL Tutorial Interactivo",
+            "url": "https://example.com/sql-tutorial",
+            "type": "course",
+            "language": "es",
+            "verified": true
+          },
+          "skill": {
+            "id": "skill-sql",
+            "slug": "sql",
+            "name": "SQL",
+            "progress": 0,
+            "status": "available",
+            "readyForAssessment": false
+          }
+        }
+      ]
+    }
+  ],
+  "objectives": [
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "skillId": "skill-sql",
+      "description": "Dominar consultas SQL para análisis de datos.",
+      "criteria": [
+        "Escribir filtros condicionales.",
+        "Realizar agregaciones con GROUP BY."
+      ],
+      "targetLevel": 3,
+      "status": "active"
+    }
+  ],
+  "stats": {
+    "totalActivities": 4,
+    "completedActivities": 0,
+    "skippedActivities": 0,
+    "totalMinutes": 600,
+    "completedMinutes": 0
+  }
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request:** `{"error": "Active learner has no target role specified", "code": "NO_TARGET_ROLE"}`
+- **404 Not Found:** `{"error": "No active learner profile found. Complete onboarding first.", "code": "NO_LEARNER"}`
+- **404 Not Found:** `{"error": "Target role \"...\" not found", "code": "ROLE_NOT_FOUND"}`
+- **409 Conflict:** `{"error": "An active learning journey already exists for this learner", "code": "JOURNEY_EXISTS"}`
+- **500 Internal Server Error:** Database or orchestration error.
+
+---
+
+### `GET /api/journey`
+
+Retrieves the currently active learning journey for the active learner, including weeks, activities (joined with resources and skill progress), objectives, and aggregate statistics.
+
+- **Authentication:** None (Single-user MVP)
+- **Method:** `GET`
+- **Cache:** `no-store` (force-dynamic)
+- **AI Calls:** EXACTLY ZERO AI calls. Reloading the screen never calls Gemini.
+
+#### Response (200 OK)
+
+Same schema structure as `POST /api/journey/generate` response.
+
+#### Error Responses
+
+- **404 Not Found:** `{"error": "No active learner profile found. Complete onboarding first.", "code": "NO_LEARNER"}`
+- **404 Not Found:** `{"error": "No active learning journey found", "code": "NO_ACTIVE_JOURNEY"}`
+- **500 Internal Server Error:** Unexpected database error.
+
+---
+
+### `POST /api/activities/:id/complete`
+
+Marks an activity as completed (`status = 'done'`), calculates incremental skill progress, updates `learner_skills`, and returns the updated activity and skill state.
+
+- **Authentication:** None (Single-user MVP; validates ownership against the active journey)
+- **Method:** `POST`
+- **AI Calls:** EXACTLY ZERO AI calls.
+
+#### Progress Calculation Rules
+- `progressIncrease = Math.round(activity.estimated_minutes / (currentGap * MINUTES_PER_LEVEL) * 100)`
+- Total `progress` is capped at `100`.
+- If `status === 'available'` and `progress > 0`, status transitions to `'in_progress'`.
+- `readyForAssessment` is a derived boolean: `progress >= 100`.
+- **CRITICAL INVARIANT (Rule R-04):** Completing activities NEVER modifies the skill level. Skill levels change exclusively through SPEC-004 assessments.
+
+#### Response (200 OK)
+
+```json
+{
+  "success": true,
+  "activity": {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "status": "done",
+    "completedAt": "2026-01-02T10:00:00Z"
+  },
+  "skill": {
+    "skillId": "skill-sql",
+    "level": 1,
+    "status": "in_progress",
+    "progress": 50,
+    "readyForAssessment": false
+  }
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request:** `{"error": "Activity ID is required", "code": "ACTIVITY_NOT_FOUND"}`
+- **403 Forbidden:** `{"error": "Activity does not belong to active learner journey", "code": "NOT_OWNER"}`
+- **404 Not Found:** `{"error": "Activity \"...\" not found", "code": "ACTIVITY_NOT_FOUND"}`
+- **404 Not Found:** `{"error": "No active learner profile found", "code": "NO_LEARNER"}`
+- **500 Internal Server Error:** Database update error.
+
+---
+
+### `POST /api/activities/:id/skip`
+
+Marks an activity as skipped (`status = 'skipped'`) and returns the accumulated skipped count for the journey.
+
+- **Authentication:** None (Single-user MVP; validates ownership against active journey)
+- **Method:** `POST`
+- **AI Calls:** EXACTLY ZERO AI calls.
+- **NO REPLANNING:** Skipping records the skip in the database only. Does NOT trigger journey replanning (SPEC-004 owns adaptive replanning).
+
+#### Response (200 OK)
+
+```json
+{
+  "success": true,
+  "activity": {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "status": "skipped"
+  },
+  "skippedCount": 1
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request:** `{"error": "Activity ID is required", "code": "ACTIVITY_NOT_FOUND"}`
+- **403 Forbidden:** `{"error": "Activity does not belong to active learner journey", "code": "NOT_OWNER"}`
+- **404 Not Found:** `{"error": "Activity \"...\" not found", "code": "ACTIVITY_NOT_FOUND"}`
+- **404 Not Found:** `{"error": "No active learner profile found", "code": "NO_LEARNER"}`
+- **500 Internal Server Error:** Database update error.
+
+
 
