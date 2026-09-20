@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EduPath · Tu camino de aprendizaje",
-  description: "Un camino de aprendizaje adaptativo y verificable",
+  title: "EduPath · Your learning path",
+  description: "An adaptive and verifiable learning path",
 };
 
 export default function RootLayout({
@@ -36,13 +36,13 @@ export default function RootLayout({
               <span className="text-xl font-black tracking-tight text-slate-900">edu<span className="text-[#14a36d]">path</span></span>
             </Link>
             <nav className="hidden lg:flex items-center gap-1 text-sm font-bold text-slate-600" aria-label="Navegación principal">
-              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/dashboard">Mi mapa</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/journey">Mi plan</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/progress">Progreso</Link>
-              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/notebooks">Cuadernos</Link>
+              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/dashboard">My map</Link>
+              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/journey">My plan</Link>
+              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/progress">Progress</Link>
+              <Link className="rounded-lg px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700" href="/notebooks">Notebooks</Link>
             </nav>
             <Link href="/tutor" className="inline-flex items-center gap-2 rounded-xl bg-[#0d7a53] px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#086343]">
-              <span>✦</span> Pregunta al tutor
+              <span>✦</span> Ask your tutor
             </Link>
           </div>
         </header>
