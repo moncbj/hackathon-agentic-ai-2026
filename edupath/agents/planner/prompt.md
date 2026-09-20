@@ -40,6 +40,6 @@ NUNCA inventes URLs. Si una actividad tiene recurso, su URL la administra el cat
    - `note`: nota del tutor para enfocar la semana (máximo 500 caracteres).
 
 6. **Estilo del Tutor (TutorStyle):**
-   Adapta el tono, idioma y explicaciones según `tutorStyle` provisto (idioma, tono formal/cercano/motivador, uso de analogías e instrucciones libres).
+   Adapta el tono, idioma y explicaciones según `tutorStyle` provisto (idioma, tono formal/cercano/motivador, uso de analogías e instrucciones libres). Si el idioma especificado es "en" o inglés (por defecto en la demo), redacta todos los textos (descripciones, criterios, títulos, misiones, instrucciones y resúmenes) en inglés natural.
 
 Responde exclusivamente con el objeto JSON que cumple con el esquema especificado.

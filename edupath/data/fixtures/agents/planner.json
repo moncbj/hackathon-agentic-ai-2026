@@ -2,96 +2,96 @@
   "objectives": [
     {
       "skillSlug": "sql",
-      "description": "Dominar consultas relacionales, filtros avanzados y agregaciones para extraer respuestas de negocio.",
+      "description": "Master relational queries, advanced filtering, and aggregations to extract business answers.",
       "masteryCriteria": [
-        "Escribir consultas SELECT con filtrado WHERE y ordenamiento ORDER BY.",
-        "Realizar agregaciones y agrupaciones con GROUP BY y HAVING.",
-        "Unir tablas usando INNER y LEFT JOIN sin duplicar filas."
+        "Write SELECT queries with WHERE filtering and ORDER BY sorting.",
+        "Perform aggregations and groupings using GROUP BY and HAVING.",
+        "Join tables using INNER and LEFT JOIN without duplicate rows."
       ]
     },
     {
       "skillSlug": "spreadsheets",
-      "description": "Construir tablas dinámicas y modelos tabulares para analizar información cuantitativa.",
+      "description": "Build pivot tables and tabular models to analyze quantitative information.",
       "masteryCriteria": [
-        "Aplicar funciones lógicas y de búsqueda condicional.",
-        "Construir tablas dinámicas organizando dimensiones y métricas.",
-        "Crear visualizaciones que comuniquen tendencias clave."
+        "Apply logical and conditional lookup functions.",
+        "Build pivot tables organizing dimensions and metrics.",
+        "Create visualizations that communicate key trends."
       ]
     },
     {
       "skillSlug": "basic-python",
-      "description": "Escribir scripts en Python para procesar datos tabulares usando estructuras nativas.",
+      "description": "Write Python scripts to process tabular data using native structures.",
       "masteryCriteria": [
-        "Crear bucles y funciones reutilizables.",
-        "Manipular listas, diccionarios y colecciones.",
-        "Importar y depurar módulos estándar de procesamiento."
+        "Create reusable loops and functions.",
+        "Manipulate lists, dictionaries, and collections.",
+        "Import and debug standard data processing modules."
       ]
     }
   ],
   "activities": [
     {
       "slotId": "slot-w1-sql-resource-1",
-      "title": "Fundamentos de SQL y sintaxis SELECT",
-      "mission": "Explora cómo las consultas básicas interrogan bases de datos relacionales y extraen los primeros hallazgos.",
-      "instructions": "Revisa los capítulos de introducción y anota tres casos de uso donde un filtro WHERE resulta esencial.",
-      "successCriteria": "Identificar correctamente la tabla fuente, las columnas proyectadas y el criterio de filtrado."
+      "title": "SQL Fundamentals and SELECT Syntax",
+      "mission": "Explore how basic queries interrogate relational databases and extract initial insights.",
+      "instructions": "Review introductory chapters and note three use cases where a WHERE filter is essential.",
+      "successCriteria": "Correctly identify the source table, projected columns, and filtering criteria."
     },
     {
       "slotId": "slot-w1-sql-practice-1",
-      "title": "Práctica guiada: Consultas con filtros",
-      "mission": "Pon a prueba tus habilidades formulando consultas sobre un conjunto de transacciones de ventas.",
-      "instructions": "1. Abre la base de datos de práctica.\n2. Escribe una consulta para filtrar pedidos del último trimestre.\n3. Ordena los resultados por volumen total descendente.",
-      "successCriteria": "La consulta se ejecuta sin errores de sintaxis y retorna únicamente las filas esperadas."
+      "title": "Guided Practice: Queries with Filters",
+      "mission": "Test your skills by formulating queries over a sales transaction dataset.",
+      "instructions": "1. Open the practice database.\n2. Write a query to filter orders from the last quarter.\n3. Sort results by total volume descending.",
+      "successCriteria": "Query executes without syntax errors and returns only the expected rows."
     },
     {
       "slotId": "slot-w2-spreadsheets-resource-1",
-      "title": "Análisis rápido con tablas dinámicas",
-      "mission": "Aprende a resumir miles de filas en una vista ejecutiva compacta usando tablas dinámicas.",
-      "instructions": "Observa el tutorial prestando especial atención a la ubicación de campos entre filas, columnas y valores.",
-      "successCriteria": "Comprender la diferencia entre resumir por suma y por recuento en un reporte financiero."
+      "title": "Fast Analysis with Pivot Tables",
+      "mission": "Learn how to summarize thousands of rows into a compact executive view using pivot tables.",
+      "instructions": "Watch the tutorial paying close attention to placing fields across rows, columns, and values.",
+      "successCriteria": "Understand the difference between sum and count summaries in a financial report."
     },
     {
       "slotId": "slot-w2-spreadsheets-practice-1",
-      "title": "Práctica: Creación de tablas dinámicas",
-      "mission": "Transforma un archivo tabular plano en una tabla dinámica con subtotales por departamento.",
-      "instructions": "1. Importa la hoja de cálculo.\n2. Inserta una tabla dinámica.\n3. Agrega departamento en filas y presupuesto en valores.",
-      "successCriteria": "La tabla dinámica muestra la suma de presupuesto agrupada correctamente por departamento."
+      "title": "Practice: Creating Pivot Tables",
+      "mission": "Transform a flat tabular file into a pivot table with subtotals by department.",
+      "instructions": "1. Import the spreadsheet.\n2. Insert a pivot table.\n3. Place department in rows and budget in values.",
+      "successCriteria": "Pivot table displays the budget sum correctly grouped by department."
     },
     {
       "slotId": "slot-w3-sql-practice-1",
-      "title": "Profundización: Joins y agrupaciones",
-      "mission": "Cruza tablas de clientes y pedidos para responder qué segmento genera mayor margen de utilidad.",
-      "instructions": "1. Escribe un INNER JOIN entre clientes y pedidos.\n2. Agrupa por segmento de cliente.\n3. Calcula el promedio de compra.",
-      "successCriteria": "El reporte resultante muestra métricas precisas por cada segmento de cliente."
+      "title": "Deep Dive: Joins and Groupings",
+      "mission": "Combine customer and order tables to determine which segment generates the highest profit margin.",
+      "instructions": "1. Write an INNER JOIN between customers and orders.\n2. Group by customer segment.\n3. Calculate average purchase value.",
+      "successCriteria": "Resulting report displays accurate metrics for each customer segment."
     },
     {
       "slotId": "slot-w4-sql-project-1",
-      "title": "Proyecto integrador: Auditoría comercial",
-      "mission": "Desarrolla un análisis completo de pedidos para el equipo de operaciones utilizando consultas avanzadas.",
-      "instructions": "1. Diseña una consulta compleja que consolide métricas por región.\n2. Identifica las tres sucursales con menor rotación.\n3. Redacta dos conclusiones accionables basadas en la data.",
-      "successCriteria": "El script SQL completo produce la tabla final y el resumen escrito responde a la pregunta de negocio."
+      "title": "Capstone Project: Commercial Audit",
+      "mission": "Develop a comprehensive order analysis for the operations team using advanced queries.",
+      "instructions": "1. Design a complex query consolidating metrics by region.\n2. Identify the three branches with lowest turnover.\n3. Write two actionable conclusions based on the data.",
+      "successCriteria": "Complete SQL script produces the final table and the written summary answers the business question."
     }
   ],
   "weeklySummaries": [
     {
       "week": 1,
-      "headline": "Semana 1: Conquistando el lenguaje de los datos",
-      "note": "Comenzaremos explorando SQL desde la base, consolidando la confianza para escribir consultas claras y efectivas."
+      "headline": "Week 1: Mastering the Language of Data",
+      "note": "We begin by exploring SQL fundamentals, building confidence to write clear and effective queries."
     },
     {
       "week": 2,
-      "headline": "Semana 2: Patrones y síntesis en hojas de cálculo",
-      "note": "Esta semana aprenderás a resumir grandes volúmenes de datos con rapidez para identificar tendencias clave."
+      "headline": "Week 2: Patterns and Synthesis in Spreadsheets",
+      "note": "This week you will learn to quickly summarize large volumes of data to identify key trends."
     },
     {
       "week": 3,
-      "headline": "Semana 3: Relaciones y agregaciones avanzadas",
-      "note": "Conectarás múltiples dimensiones de datos para responder preguntas de negocio de mayor impacto."
+      "headline": "Week 3: Relationships and Advanced Aggregations",
+      "note": "You will connect multiple data dimensions to answer higher-impact business questions."
     },
     {
       "week": 4,
-      "headline": "Semana 4: Proyecto de consolidación",
-      "note": "Integrarás todo lo aprendido en un caso práctico que demuestra tu capacidad analítica real."
+      "headline": "Week 4: Consolidation Project",
+      "note": "You will integrate everything learned into a practical case demonstrating real analytical capability."
     }
   ]
 }

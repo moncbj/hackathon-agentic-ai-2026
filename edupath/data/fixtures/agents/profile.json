@@ -3,31 +3,31 @@
     {
       "skillSlug": "basic-python",
       "proposedLevel": 2,
-      "rationale": "Menciona 2 años de experiencia con Python y scripts de automatización",
+      "rationale": "Mentions 2 years of experience with Python and automation scripts",
       "confidence": "medium"
     },
     {
       "skillSlug": "sql",
       "proposedLevel": 1,
-      "rationale": "Menciona consultas básicas en una base de datos universitaria",
+      "rationale": "Mentions basic queries in a university database",
       "confidence": "low"
     },
     {
       "skillSlug": "spreadsheets",
       "proposedLevel": 3,
-      "rationale": "Describe uso avanzado de Excel con tablas dinámicas y VLOOKUP",
+      "rationale": "Describes advanced Excel usage with pivot tables and VLOOKUP",
       "confidence": "high"
     },
     {
       "skillSlug": "descriptive-statistics",
       "proposedLevel": 1,
-      "rationale": "Conoce conceptos de media y mediana del curso de estadística",
+      "rationale": "Familiar with mean and median concepts from statistics coursework",
       "confidence": "low"
     },
     {
       "skillSlug": "data-visualization",
       "proposedLevel": 1,
-      "rationale": "Ha creado gráficos básicos en Excel para reportes universitarios",
+      "rationale": "Created basic charts in Excel for academic reports",
       "confidence": "low"
     }
   ],
@@ -35,8 +35,8 @@
     {
       "name": "Docker",
       "proposedLevel": 1,
-      "rationale": "Menciona uso básico de contenedores para un proyecto"
+      "rationale": "Mentions basic container usage for a project"
     }
   ],
-  "summary": "El perfil muestra experiencia sólida en hojas de cálculo y conocimientos básicos de programación en Python. Se recomienda verificar el nivel de SQL con una evaluación."
+  "summary": "The profile demonstrates solid experience in spreadsheets and foundational programming skills in Python. Verifying the SQL level with an assessment is recommended."
 }
